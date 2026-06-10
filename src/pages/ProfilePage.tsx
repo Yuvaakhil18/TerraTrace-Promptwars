@@ -81,7 +81,7 @@ export default function ProfilePage() {
   const achievements = [
     {
       icon: '🛡️',
-      bg: 'bg-[#eaf6ec]',
+      bg: 'bg-[#eaf6ec] dark:bg-[#059669]/20',
       iconBg: 'bg-[#059669]',
       label: 'First Step',
       desc: 'Log your first activity',
@@ -90,7 +90,7 @@ export default function ProfilePage() {
     },
     {
       icon: '🌳',
-      bg: 'bg-[#f0fdf4]',
+      bg: 'bg-[#f0fdf4] dark:bg-[#16a34a]/20',
       iconBg: 'bg-[#16a34a]',
       label: 'Plant Protector',
       desc: 'Save 5 kg CO₂e',
@@ -99,7 +99,7 @@ export default function ProfilePage() {
     },
     {
       icon: '⚡',
-      bg: 'bg-blue-50',
+      bg: 'bg-blue-50 dark:bg-blue-500/20',
       iconBg: 'bg-blue-500',
       label: 'Energy Saver',
       desc: 'Save 10 kWh',
@@ -108,7 +108,7 @@ export default function ProfilePage() {
     },
     {
       icon: '🎯',
-      bg: 'bg-purple-50',
+      bg: 'bg-purple-50 dark:bg-purple-500/20',
       iconBg: 'bg-purple-500',
       label: 'Consistent',
       desc: 'Log 7 days in a row',
@@ -217,29 +217,29 @@ export default function ProfilePage() {
           <div className="grid grid-cols-3 gap-4">
             {/* Total Saved */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#eaf6ec] flex items-center justify-center text-xl flex-shrink-0">🌿</div>
+              <div className="w-10 h-10 rounded-full bg-[#eaf6ec] dark:bg-[#059669]/20 flex items-center justify-center text-xl flex-shrink-0">🌿</div>
               <div>
-                <p className="text-lg font-black text-slate-900">{totalSaved.toFixed(1)}</p>
+                <p className="text-lg font-black text-slate-900 dark:text-slate-100">{totalSaved.toFixed(1)}</p>
                 <p className="text-[10px] text-slate-500 font-semibold leading-tight">kg CO₂e<br/>Total Saved</p>
               </div>
             </div>
             {/* Activities */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-500/20 flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
               </div>
               <div>
-                <p className="text-lg font-black text-slate-900">{activities.length}</p>
+                <p className="text-lg font-black text-slate-900 dark:text-slate-100">{activities.length}</p>
                 <p className="text-[10px] text-slate-500 font-semibold leading-tight">Activities<br/>Logged</p>
               </div>
             </div>
             {/* Challenges */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-500/20 flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
               </div>
               <div>
-                <p className="text-lg font-black text-slate-900">{completedChallenges}</p>
+                <p className="text-lg font-black text-slate-900 dark:text-slate-100">{completedChallenges}</p>
                 <p className="text-[10px] text-slate-500 font-semibold leading-tight">Challenges<br/>Completed</p>
               </div>
             </div>
@@ -348,9 +348,9 @@ export default function ProfilePage() {
                 <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${a.color} flex items-center justify-center text-2xl mb-2 shadow-sm`}>
                   {a.icon}
                 </div>
-                <p className="text-xs font-bold text-slate-900">{a.label}</p>
-                <p className="text-[10px] text-slate-500 leading-tight mt-0.5">{a.desc}</p>
-                {a.unlocked && <span className="mt-1.5 text-[9px] bg-white text-[#059669] font-bold px-1.5 py-0.5 rounded-full">✓ Unlocked</span>}
+                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">{a.label}</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mt-0.5">{a.desc}</p>
+                {a.unlocked && <span className="mt-1.5 text-[9px] bg-white dark:bg-black/20 text-[#059669] dark:text-[#34d399] font-bold px-1.5 py-0.5 rounded-full">✓ Unlocked</span>}
               </div>
             ))}
           </div>
