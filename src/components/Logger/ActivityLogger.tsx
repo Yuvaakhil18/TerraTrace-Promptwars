@@ -76,6 +76,14 @@ export default function ActivityLogger({ onAdd }: ActivityLoggerProps) {
     <div className="relative">
       <Card variant="elevated">
         <form onSubmit={handleSubmit} noValidate aria-label="Activity log form">
+          {/* Toast Notification */}
+          <div
+            aria-live="assertive"
+            className="sr-only"
+          >
+            {toast.visible ? toast.message : ''}
+          </div>
+
           <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-6">Log an Activity</h2>
 
           {/* Category Picker */}

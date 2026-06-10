@@ -71,7 +71,7 @@ export default function EmissionsChart({ weeklyData, categoryBreakdown }: Emissi
   return (
     <Card variant="elevated">
       {/* 7-day bar chart */}
-      <div className="mb-8">
+      <div className="mb-8" role="region" aria-label="Line chart showing emissions over the last 7 days">
         <h3 className="text-base font-semibold text-[var(--text-primary)] mb-5">7-Day Emissions Trend</h3>
         <div role="img" aria-label="7-day CO₂ emissions bar chart">
           <ResponsiveContainer width="100%" height={220}>

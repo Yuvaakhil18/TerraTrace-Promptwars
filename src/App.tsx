@@ -2,12 +2,12 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
-import DashboardPage from './pages/DashboardPage';
-import LogPage from './pages/LogPage';
 import Spinner from './components/ui/Spinner';
 import AuthGuard from './components/Layout/AuthGuard';
-import AuthPage from './pages/AuthPage';
 
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const LogPage = lazy(() => import('./pages/LogPage'));
 const InsightsPage  = lazy(() => import('./pages/InsightsPage'));
 const ChallengePage = lazy(() => import('./pages/ChallengePage'));
 

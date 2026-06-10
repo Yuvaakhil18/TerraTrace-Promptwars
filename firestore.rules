@@ -2,7 +2,16 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User data: activities, challenges, preferences
+    // User data: activities
+    match /users/{userId}/activities/{activityId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId
+                   && request.resource.data.keys().hasAll(['category', 'co2e_kg', 'timestamp'])
+                   && request.resource.data.co2e_kg is number
+                   && request.resource.data.category in ['transport', 'food', 'energy', 'shopping'];
+    }
+
+    // User data: challenges, preferences
     match /users/{userId}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
