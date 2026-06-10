@@ -9,7 +9,7 @@ Carbon Footprint Tracking & Reduction (Challenge 3 — PromptWars Virtual)
 React 19 · Vite 8 · TypeScript 5 · Tailwind CSS v4 · Firebase Auth & Firestore · @google/genai · Recharts · React Router v7
 
 ## Approach & Logic
-EcoLens is a cloud-synced, multi-user React application with Firebase authentication and Firestore persistence. Users log daily activities across four categories (Transport, Food, Energy, Shopping). An emission calculation engine translates activities into kg CO₂e using IPCC AR6-aligned coefficients. The Dashboard visualises a 7-day trend and benchmarks the user against the global average. Gemini 2.5 Flash analyses the user's actual data and returns 3 context-specific, actionable tips — streamed progressively using the @google/genai SDK's generateContentStream method. Eco Challenges nudge behaviour change with Firestore-persisted completion tracking.
+TerraTrace is a cloud-synced, multi-user React application with Firebase authentication and Firestore persistence. Users log daily activities across four categories (Transport, Food, Energy, Shopping). An emission calculation engine translates activities into kg CO₂e using IPCC AR6-aligned coefficients. The Dashboard visualises a 7-day trend and benchmarks the user against the global average. Gemini 2.5 Flash analyses the user's actual data and returns 3 context-specific, actionable tips — guaranteed by schema configuration using the @google/genai SDK's `generateContent` with structured JSON schema parameters. Eco Challenges nudge behaviour change with Firestore-persisted completion tracking.
 
 ## How the Solution Works
 1. User authenticates via Email/Password, Google, Apple, Facebook, or Phone OTP
@@ -22,8 +22,8 @@ EcoLens is a cloud-synced, multi-user React application with Firebase authentica
 ## AI Integration
 - SDK: `@google/genai` 2.8.0 (official GA SDK — replaces deprecated `@google/generative-ai`)
 - Model: `gemini-2.5-flash` via Google AI Studio API key
-- Usage pattern: streaming JSON generation (`generateContentStream`)
-- Security: API key via env only · input sanitisation · prompt injection guard in system prompt
+- Usage pattern: structured JSON schema verification (`responseSchema` and `responseMimeType: 'application/json'` configuration on `generateContent`)
+- Security: API key via env only · input sanitisation · prompt injection guard in system prompt · schema validation
 - Caching: 24-hour localStorage cache keyed on summary hash — avoids unnecessary API calls
 - Error handling: graceful fallback for missing API key, rate limiting, and parse failures
 
@@ -39,6 +39,7 @@ EcoLens is a cloud-synced, multi-user React application with Firebase authentica
 
 ## Accessibility
 - WCAG 2.1 AA compliant
+- WAI-ARIA standards compliant Roving TabIndex keyboard-navigable CategoryPicker
 - Semantic HTML throughout (`<main>`, `<nav>`, `<section>`, `<article>`)
 - All form fields labelled · 44px minimum tap targets · focus-visible rings
 - Colour never sole state indicator · `prefers-reduced-motion` respected
@@ -53,7 +54,7 @@ EcoLens is a cloud-synced, multi-user React application with Firebase authentica
 ## Setup
 ```bash
 git clone <repo-url>
-cd ecolens
+cd terratrace
 npm install
 cp .env.example .env
 # Add your keys:
@@ -70,11 +71,10 @@ npm run test
 ## Build & Deploy
 ```bash
 npm run build
-npx firebase-tools deploy
 ```
 
 ## Live Preview
-[Add your deployed URL here]
+https://ecofoot-8fa45.web.app/
 
 ## License
 MIT
