@@ -73,10 +73,13 @@ export default function Navbar() {
   return (
     <aside className="w-64 bg-[var(--bg-surface)] border-r border-[var(--border-color)] flex flex-col h-full flex-shrink-0 transition-colors duration-300">
       {/* Logo Area */}
-      <div className="p-6 flex items-center gap-3">
+      <button 
+        onClick={() => window.location.href = '/'} 
+        className="p-6 flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none text-left cursor-pointer"
+      >
         <span className="text-2xl" aria-hidden="true">🌱</span>
         <span className="text-xl font-bold text-[var(--text-primary)] tracking-tight">TerraTrace</span>
-      </div>
+      </button>
 
       {/* Main Navigation */}
       <nav className="flex-1 px-4 space-y-1 mt-4">
