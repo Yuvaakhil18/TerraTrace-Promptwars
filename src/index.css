@@ -68,6 +68,9 @@
   .dark .bg-\[\#F8FAFC\]        { background-color: var(--bg-card-hover) !important; }
   .dark .bg-\[\#f3fbf5\]        { background-color: color-mix(in srgb, #059669 15%, var(--bg-card)) !important; }
   .dark .bg-\[\#eaf6ec\]        { background-color: color-mix(in srgb, #059669 20%, var(--bg-card)) !important; }
+  .dark .bg-\[\#f0fdf4\]        { background-color: color-mix(in srgb, #16a34a 20%, var(--bg-card)) !important; }
+  .dark .bg-blue-50             { background-color: color-mix(in srgb, var(--color-sky) 20%, var(--bg-card)) !important; }
+  .dark .bg-purple-50           { background-color: color-mix(in srgb, #a855f7 20%, var(--bg-card)) !important; }
 
   .dark .border-slate-100       { border-color: var(--border-subtle) !important; }
   .dark .border-slate-200       { border-color: var(--border-color) !important; }
@@ -79,6 +82,7 @@
   .dark .text-slate-600         { color: var(--text-secondary) !important; }
   .dark .text-slate-500         { color: var(--text-muted) !important; }
   .dark .text-slate-400         { color: var(--text-muted) !important; }
+  .dark .text-\[\#059669\]      { color: var(--color-leaf-light) !important; }
 
   .dark .gradient-leaf-radial {
     background: radial-gradient(circle at top right, color-mix(in srgb, var(--color-leaf) 5%, transparent) 0%, transparent 40%),
