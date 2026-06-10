@@ -93,7 +93,7 @@ export default function DashboardPage() {
           <div className="relative" ref={periodRef}>
             <button
               onClick={() => { setPeriodOpen(o => !o); setNotifOpen(false); }}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
             >
               <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -104,15 +104,15 @@ export default function DashboardPage() {
               </svg>
             </button>
             {periodOpen && (
-              <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden animate-fade-in">
+              <div className="absolute right-0 top-full mt-2 w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden animate-fade-in">
                 {PERIODS.map(p => (
                   <button
                     key={p.label}
                     onClick={() => { setSelectedPeriod(p); setPeriodOpen(false); }}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                       p.label === selectedPeriod.label
-                        ? 'bg-[#eaf6ec] text-[#059669] font-bold'
-                        : 'text-slate-700 hover:bg-slate-50'
+                        ? 'bg-[#eaf6ec] dark:bg-[#059669]/20 text-[#059669] dark:text-[#34d399] font-bold'
+                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                     }`}
                   >
                     {p.label}
@@ -136,31 +136,33 @@ export default function DashboardPage() {
               )}
             </button>
             {notifOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden animate-fade-in">
-                <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-                  <span className="text-sm font-bold text-slate-900">Recent Activity</span>
-                  <span className="text-[10px] font-bold text-[#059669] bg-[#eaf6ec] px-2 py-0.5 rounded-full">{recentActivities.length} logged</span>
+              <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl z-50 overflow-hidden animate-fade-in">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                  <span className="text-sm font-bold text-slate-900 dark:text-slate-100">Recent Activity</span>
+                  <span className="text-[10px] font-bold text-[#059669] bg-[#eaf6ec] dark:bg-[#059669]/20 px-2 py-0.5 rounded-full">{recentActivities.length} logged</span>
                 </div>
-                <div className="max-h-72 overflow-y-auto divide-y divide-slate-50">
+                <div className="max-h-72 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-700/50">
                   {notifications.map((n, i) => (
-                    <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors">
-                      <div className="w-9 h-9 rounded-full bg-[#f3fbf5] flex items-center justify-center text-lg flex-shrink-0">{n.icon}</div>
+                    <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                      <div className="w-9 h-9 rounded-full bg-[#f3fbf5] dark:bg-slate-700 flex items-center justify-center text-lg flex-shrink-0">{n.icon}</div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-slate-900 truncate">{n.title}</p>
-                        <p className="text-[11px] text-slate-500 truncate">{n.desc}</p>
+                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">{n.title}</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{n.desc}</p>
                       </div>
                       {n.time && <span className="text-[10px] text-slate-400 flex-shrink-0">{n.time}</span>}
                     </div>
                   ))}
+                  {recentActivities.length === 0 && (
+                    <p className="text-center text-sm text-slate-500 dark:text-slate-400 py-6">Log your first activity to see it here.</p>
+                  )}
                 </div>
-                <div className="px-4 py-3 border-t border-slate-100">
-                  <button
-                    onClick={() => { navigate('/log'); setNotifOpen(false); }}
-                    className="w-full text-center text-xs font-bold text-[#059669] hover:underline"
-                  >
-                    + Log a new activity
-                  </button>
-                </div>
+                {recentActivities.length > 0 && (
+                  <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                    <button className="w-full text-center text-xs font-bold text-[#059669] hover:text-[#047857] transition-colors" onClick={() => navigate('/log')}>
+                      View All History →
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
