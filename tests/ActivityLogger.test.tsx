@@ -28,7 +28,11 @@ describe('ActivityLogger', () => {
       screen.getAllByRole('spinbutton'),
     );
     focusable.forEach(el => {
-      expect(el).not.toHaveAttribute('tabindex', '-1');
+      if (el.getAttribute('role') === 'radio' && el.getAttribute('aria-checked') === 'false') {
+        expect(el).toHaveAttribute('tabindex', '-1');
+      } else {
+        expect(el).not.toHaveAttribute('tabindex', '-1');
+      }
     });
   });
 });

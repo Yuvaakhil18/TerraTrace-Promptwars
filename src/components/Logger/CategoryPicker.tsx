@@ -13,11 +13,32 @@ const CATEGORIES: { value: Category; label: string; icon: string; color: string 
 ];
 
 export default function CategoryPicker({ selected, onChange }: CategoryPickerProps) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
+    let nextIndex = index;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      nextIndex = (index + 1) % CATEGORIES.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      nextIndex = (index - 1 + CATEGORIES.length) % CATEGORIES.length;
+    } else {
+      return;
+    }
+    e.preventDefault();
+    onChange(CATEGORIES[nextIndex].value);
+    
+    // Focus the next/prev button in DOM
+    const buttons = e.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('button[role="radio"]');
+    buttons?.[nextIndex]?.focus();
+  };
+
   return (
     <fieldset>
       <legend className="text-sm font-semibold text-[var(--text-secondary)] mb-3">Select Category</legend>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" role="group" aria-label="Activity category">
-        {CATEGORIES.map(cat => {
+      <div 
+        className="grid grid-cols-2 sm:grid-cols-4 gap-3" 
+        role="radiogroup" 
+        aria-label="Activity category"
+      >
+        {CATEGORIES.map((cat, index) => {
           const isSelected = selected === cat.value;
           return (
             <button
@@ -25,6 +46,8 @@ export default function CategoryPicker({ selected, onChange }: CategoryPickerPro
               type="button"
               role="radio"
               aria-checked={isSelected}
+              tabIndex={isSelected ? 0 : -1}
+              onKeyDown={(e) => handleKeyDown(e, index)}
               onClick={() => onChange(cat.value)}
               className={`
                 relative flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2
