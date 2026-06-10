@@ -15,7 +15,7 @@ export interface Activity {
 export interface Insight {
   title: string;
   description: string;
-  saving_kg: number;
+  potential_reduction_kg: number;
   category: Category;
   icon: string;
 }

@@ -1,211 +1,144 @@
-import { useState } from 'react';
 import { NavLink, useNavigate, type NavLinkRenderProps } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import ThemeToggle from '../ui/ThemeToggle';
+import { useTheme } from '../../context/ThemeContext';
 
 interface NavItem {
   to: string;
   label: string;
-  icon: string;
-  activeIcon: string;
+  icon: ReactNode;
 }
+
+const NavIcon = ({ name, active }: { name: string, active: boolean }) => {
+  const color = active ? 'currentColor' : '#64748b'; // slate-500
+  
+  switch (name) {
+    case 'Dashboard':
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={color}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      );
+    case 'Log':
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={color}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+        </svg>
+      );
+    case 'Insights':
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={color}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      );
+    case 'Challenges':
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={color}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      );
+    case 'Profile':
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={color}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      );
+    default: return <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke={color}><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>;
+  }
+};
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/',           label: 'Dashboard',  icon: '📊', activeIcon: '📊' },
-  { to: '/log',        label: 'Log',        icon: '✏️', activeIcon: '✏️' },
-  { to: '/insights',   label: 'Insights',   icon: '✨', activeIcon: '✨' },
-  { to: '/challenges', label: 'Challenges', icon: '🏆', activeIcon: '🏆' },
+  { to: '/',           label: 'Dashboard',  icon: <NavIcon name="Dashboard" active={false} /> },
+  { to: '/log',        label: 'Log',        icon: <NavIcon name="Log" active={false} /> },
+  { to: '/insights',   label: 'Insights',   icon: <NavIcon name="Insights" active={false} /> },
+  { to: '/challenges', label: 'Challenges', icon: <NavIcon name="Challenges" active={false} /> },
+  { to: '/profile',    label: 'Profile',    icon: <NavIcon name="Profile" active={false} /> },
 ];
 
-function desktopLinkClass({ isActive }: NavLinkRenderProps): string {
-  return `relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium
-   transition-all duration-300 min-h-11 min-w-11 group
-   focus-visible:outline-2 focus-visible:outline-leaf focus-visible:outline-offset-2
-   ${isActive
-     ? 'bg-leaf/10 text-leaf shadow-sm'
-     : 'text-[var(--text-secondary)] hover:text-leaf hover:bg-leaf/5'
-   }`;
-}
-
-
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const { currentUser, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
   const navigate = useNavigate();
-
-  function closeMobile() {
-    setMobileOpen(false);
-  }
 
   async function handleLogout() {
     await logout();
     navigate('/auth');
-    closeMobile();
   }
 
+  // Only show sidebar if authenticated
+  if (!currentUser) return null;
+
   return (
-    <>
-      {/* Desktop top nav */}
-      <nav
-        className="sticky top-0 z-40 glass border-b"
-        style={{ borderColor: 'var(--border-color)' }}
-        aria-label="Main navigation"
-      >
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
+    <aside className="w-64 bg-[var(--bg-surface)] border-r border-[var(--border-color)] flex flex-col h-full flex-shrink-0 transition-colors duration-300">
+      {/* Logo Area */}
+      <div className="p-6 flex items-center gap-3">
+        <span className="text-2xl" aria-hidden="true">🌱</span>
+        <span className="text-xl font-bold text-[var(--text-primary)] tracking-tight">TerraTrace</span>
+      </div>
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <NavLink
-              to="/"
-              className="flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-leaf focus-visible:outline-offset-2 rounded-xl group"
-              aria-label="TerraTrace Home"
-            >
-              <span className="text-2xl group-hover:animate-float transition-transform" aria-hidden="true">🌱</span>
-              <span className="text-xl font-bold gradient-text">TerraTrace</span>
-            </NavLink>
-
-            {/* Desktop nav */}
-            {currentUser && (
-              <div className="hidden md:flex items-center gap-1" role="list">
-                {NAV_ITEMS.map(item => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === '/'}
-                    role="listitem"
-                    className={desktopLinkClass}
-                  >
-                    {({ isActive }: NavLinkRenderProps) => (
-                      <>
-                        <span aria-hidden="true" className="text-base">{isActive ? item.activeIcon : item.icon}</span>
-                        <span>{item.label}</span>
-                        {isActive && (
-                          <>
-                            <span className="sr-only"> (current page)</span>
-                            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-leaf rounded-full" aria-hidden="true" />
-                          </>
-                        )}
-                      </>
-                    )}
-                  </NavLink>
-                ))}
-
-                <div className="ml-2 pl-2 border-l border-[var(--border-color)] flex items-center gap-1">
-                  <ThemeToggle />
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 min-h-11 focus-visible:outline-2 focus-visible:outline-leaf focus-visible:outline-offset-2 text-[var(--text-muted)] hover:text-danger hover:bg-danger/5"
-                    aria-label="Log out"
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {!currentUser && (
-              <div className="hidden md:flex items-center">
-                <ThemeToggle />
-              </div>
-            )}
-
-            {/* Mobile hamburger (only visible above bottom nav for menu open) */}
-            <div className="md:hidden flex items-center gap-1">
-              <ThemeToggle />
-              {currentUser && (
-                <button
-                  className="flex items-center justify-center w-11 h-11 rounded-xl
-                             text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]
-                             transition-colors duration-200
-                             focus-visible:outline-2 focus-visible:outline-leaf focus-visible:outline-offset-2"
-                  onClick={() => setMobileOpen(prev => !prev)}
-                  aria-expanded={mobileOpen}
-                  aria-controls="mobile-menu"
-                  aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-                >
-                  <svg className="w-5 h-5 transition-transform duration-200" style={{ transform: mobileOpen ? 'rotate(90deg)' : 'none' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    {mobileOpen ? (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    ) : (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    )}
-                  </svg>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile overlay menu (for logout and extra options) */}
-        {mobileOpen && currentUser && (
-          <div
-            id="mobile-menu"
-            className="md:hidden border-t animate-slide-down"
-            style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-card)' }}
+      {/* Main Navigation */}
+      <nav className="flex-1 px-4 space-y-1 mt-4">
+        {NAV_ITEMS.map(item => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.to === '/'}
+            className={({ isActive }: NavLinkRenderProps) => `
+              flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-200
+              ${isActive 
+                ? 'bg-[#eaf6ec] text-[#059669]' 
+                : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]'}
+            `}
           >
-            <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 min-h-12 focus-visible:outline-2 focus-visible:outline-leaf focus-visible:outline-offset-2 text-danger hover:bg-danger/5 text-left"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                Log Out
-              </button>
-            </div>
-          </div>
-        )}
+            {({ isActive }) => (
+              <>
+                <div className="flex items-center justify-center">
+                  <NavIcon name={item.label} active={isActive} />
+                </div>
+                <span className="text-sm">{item.label}</span>
+              </>
+            )}
+          </NavLink>
+        ))}
       </nav>
 
-      {/* Mobile bottom navigation bar */}
-      {currentUser && (
-        <nav
-          className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t"
-          style={{ borderColor: 'var(--border-color)' }}
-          aria-label="Mobile navigation"
+      {/* Bottom Actions */}
+      <div className="p-4 space-y-1">
+        <button
+          onClick={toggleTheme}
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] transition-colors"
         >
-          <div className="flex items-center justify-around h-16 px-2">
-            {NAV_ITEMS.map(item => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === '/'}
-                onClick={closeMobile}
-                className={({ isActive }: NavLinkRenderProps) => `
-                  flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl
-                  min-w-[60px] transition-all duration-200
-                  focus-visible:outline-2 focus-visible:outline-leaf focus-visible:outline-offset-2
-                  ${isActive
-                    ? 'text-leaf'
-                    : 'text-[var(--text-muted)] hover:text-leaf'
-                  }
-                `}
-              >
-                {({ isActive }: NavLinkRenderProps) => (
-                  <>
-                    <span className={`text-xl transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} aria-hidden="true">
-                      {item.icon}
-                    </span>
-                    <span className={`text-[10px] font-semibold ${isActive ? 'text-leaf' : ''}`}>{item.label}</span>
-                    {isActive && (
-                      <>
-                        <span className="sr-only"> (current page)</span>
-                        <span className="absolute -top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-leaf rounded-full" aria-hidden="true" />
-                      </>
-                    )}
-                  </>
-                )}
-              </NavLink>
-            ))}
+          <ThemeToggle />
+          <span className="text-sm">Theme</span>
+        </button>
+        
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span className="text-sm">Logout</span>
+        </button>
+
+        {/* Decorative Callout Card */}
+        <div className="mt-6 bg-[#f3fbf5] rounded-2xl p-5 relative overflow-hidden">
+          <div className="mb-3 text-2xl">🌱</div>
+          <h4 className="font-bold text-[var(--text-primary)] text-sm mb-1 leading-tight">
+            Every small step<br />counts.
+          </h4>
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed relative z-10">
+            Track today,<br />transform tomorrow.
+          </p>
+          <div className="absolute -bottom-4 -right-4 text-6xl opacity-50 transform rotate-12">
+            🌿
           </div>
-        </nav>
-      )}
-    </>
+        </div>
+      </div>
+    </aside>
   );
 }

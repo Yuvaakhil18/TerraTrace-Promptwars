@@ -1,146 +1,63 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
-import Card from '../ui/Card';
-import type { Category } from '../../types';
-import ProgressBar from '../ui/ProgressBar';
-
-interface WeeklyData {
-  date: string;
-  total: number;
-}
-
-interface CategoryBreakdown {
-  transport: number;
-  food: number;
-  energy: number;
-  shopping: number;
-}
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface EmissionsChartProps {
-  weeklyData: WeeklyData[];
-  categoryBreakdown: CategoryBreakdown;
+  weeklyData: { date: string; total: number }[];
+  categoryBreakdown?: { category: string; total: number }[];
 }
 
-const CATEGORY_CONFIG: Record<Category, { label: string; icon: string; color: 'leaf' | 'amber' | 'danger' | 'sky' }> = {
-  transport: { label: 'Transport',  icon: '🚗', color: 'sky' },
-  food:      { label: 'Food',       icon: '🍽️', color: 'amber' },
-  energy:    { label: 'Energy',     icon: '⚡',  color: 'danger' },
-  shopping:  { label: 'Shopping',   icon: '🛍️', color: 'leaf' },
-};
+export default function EmissionsChart({ weeklyData }: EmissionsChartProps) {
+  // Format data for the chart (extracting short day names)
+  const chartData = weeklyData.map(day => {
+    const d = new Date(day.date);
+    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+    return {
+      name: dayName,
+      total: Number(day.total.toFixed(2))
+    };
+  });
 
-function formatDateLabel(date: string): string {
-  const d = new Date(date);
-  return d.toLocaleDateString('en-IN', { weekday: 'short' });
-}
-
-interface TooltipPayload {
-  value: number;
-}
-
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: TooltipPayload[];
-  label?: string;
-}
-
-function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
-  if (!active || !payload || !payload.length) return null;
   return (
-    <div className="glass rounded-xl px-4 py-2.5 shadow-lg border border-[var(--border-subtle)]">
-      <p className="text-xs text-[var(--text-muted)] font-medium">{label}</p>
-      <p className="text-sm font-bold text-leaf tabular-nums">{payload[0].value.toFixed(2)} kg CO₂e</p>
+    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col h-full">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-base font-bold text-slate-900">7-Day Emissions Trend</h3>
+        <button className="flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50">
+          7 Days
+          <svg className="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="flex-1 w-full min-h-[200px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+            <XAxis 
+              dataKey="name" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fontSize: 10, fill: '#64748b' }} 
+              dy={10}
+            />
+            <YAxis 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fontSize: 10, fill: '#64748b' }} 
+              tickFormatter={(value) => `${value}kg`}
+            />
+            <Tooltip 
+              cursor={{ fill: '#f1f5f9' }}
+              contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px' }}
+            />
+            <Bar 
+              dataKey="total" 
+              fill="#22c55e" 
+              radius={[4, 4, 0, 0]} 
+              barSize={32}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
-  );
-}
-
-export default function EmissionsChart({ weeklyData, categoryBreakdown }: EmissionsChartProps) {
-  const chartData = weeklyData.map(d => ({
-    ...d,
-    label: formatDateLabel(d.date),
-  }));
-
-  const maxCategory = Math.max(...Object.values(categoryBreakdown), 0.01);
-
-  return (
-    <Card variant="elevated">
-      {/* 7-day bar chart */}
-      <div className="mb-8" role="region" aria-label="Line chart showing emissions over the last 7 days">
-        <h3 className="text-base font-semibold text-[var(--text-primary)] mb-5">7-Day Emissions Trend</h3>
-        <div role="img" aria-label="7-day CO₂ emissions bar chart">
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart
-              data={chartData}
-              margin={{ top: 4, right: 4, left: -20, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--color-leaf-light)" stopOpacity={1} />
-                  <stop offset="100%" stopColor="var(--color-leaf)" stopOpacity={0.8} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-              <XAxis
-                dataKey="label"
-                tick={{ fontSize: 12, fill: 'var(--text-secondary)' }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
-                axisLine={false}
-                tickLine={false}
-                tickFormatter={(v: number) => `${v}kg`}
-              />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'color-mix(in srgb, var(--color-leaf) 8%, transparent)' }} />
-              <Bar
-                dataKey="total"
-                fill="url(#barGradient)"
-                radius={[6, 6, 0, 0]}
-                isAnimationActive={true}
-                animationDuration={800}
-                animationEasing="ease-out"
-                name="CO₂e (kg)"
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Category breakdown */}
-      <div>
-        <h3 className="text-base font-semibold text-[var(--text-primary)] mb-5">Category Breakdown (7 days)</h3>
-        <div className="space-y-4">
-          {(Object.entries(categoryBreakdown) as [Category, number][]).map(([cat, value]) => {
-            const config = CATEGORY_CONFIG[cat];
-            return (
-              <div key={cat} className="group">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2.5">
-                    <span aria-hidden="true" className="text-base group-hover:scale-110 transition-transform">{config.icon}</span>
-                    <span className="text-sm font-medium text-[var(--text-secondary)]">{config.label}</span>
-                  </div>
-                  <span className="text-sm font-semibold text-[var(--text-primary)] tabular-nums">{value.toFixed(2)} kg</span>
-                </div>
-                <ProgressBar
-                  value={value}
-                  max={maxCategory}
-                  label={`${config.label} emissions`}
-                  showLabel={false}
-                  color={config.color}
-                  size="md"
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </Card>
   );
 }

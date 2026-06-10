@@ -1,4 +1,4 @@
-import type { ReactNode, HTMLAttributes, CSSProperties } from 'react';
+import type { ReactNode, HTMLAttributes } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -8,19 +8,11 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantClasses: Record<string, string> = {
-  default:  'border transition-all duration-300',
-  elevated: 'border transition-all duration-300 hover-lift',
-  bordered: 'border-2 transition-all duration-300',
-  leaf:     'border transition-all duration-300',
-  glass:    'glass transition-all duration-300',
-};
-
-const variantInlineStyles: Record<string, CSSProperties> = {
-  default:  { backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-subtle)', boxShadow: 'var(--shadow-card)' },
-  elevated: { backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-subtle)', boxShadow: 'var(--shadow-elevated)' },
-  bordered: { backgroundColor: 'var(--bg-card)', borderColor: 'color-mix(in srgb, var(--color-leaf) 20%, transparent)' },
-  leaf:     { backgroundColor: 'var(--color-leaf-pale)', borderColor: 'color-mix(in srgb, var(--color-leaf) 20%, transparent)' },
-  glass:    {},
+  default:  'bg-[var(--bg-card)] border-[var(--border-subtle)] shadow-[var(--shadow-card)]',
+  elevated: 'bg-[var(--bg-card)] border-[var(--border-subtle)] shadow-[var(--shadow-card-hover)]',
+  bordered: 'bg-[var(--bg-card)] border-[var(--color-leaf)]/20',
+  leaf:     'bg-[var(--color-leaf)]/5 border-[var(--color-leaf)]/20',
+  glass:    'glass-panel',
 };
 
 const paddingStyles: Record<string, string> = {
@@ -43,13 +35,13 @@ export default function Card({
     <div
       {...props}
       className={`
-        rounded-card
+        rounded-2xl border transition-all duration-300
         ${variantClasses[variant]}
         ${paddingStyles[padding]}
-        ${hover ? 'hover-lift hover-glow cursor-pointer' : ''}
+        ${hover ? 'hover:-translate-y-1 hover:shadow-lg hover:border-[var(--color-leaf)]/30 cursor-pointer' : ''}
         ${className}
       `.trim()}
-      style={{ ...variantInlineStyles[variant], ...style }}
+      style={style}
     >
       {children}
     </div>

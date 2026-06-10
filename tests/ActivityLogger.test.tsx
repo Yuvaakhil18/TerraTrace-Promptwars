@@ -15,10 +15,13 @@ describe('ActivityLogger', () => {
     const user = userEvent.setup();
     render(<ActivityLogger onAdd={vi.fn()} />);
     const qty = screen.getByRole('spinbutton', { name: /quantity/i });
-    await user.clear(qty);
-    await user.type(qty, '0');
-    await user.click(screen.getByRole('button', { name: /log activity/i }));
-    expect(screen.getByRole('alert')).toBeInTheDocument();
+    await user.tripleClick(qty);
+    await user.keyboard('0');
+    const submitBtn = screen.getByRole('button', { name: /log activity/i });
+    await user.click(submitBtn);
+    // Error alert should appear in the DOM
+    const alert = await screen.findByRole('alert');
+    expect(alert).toBeInTheDocument();
   });
 
   it('all interactive elements are keyboard reachable', () => {

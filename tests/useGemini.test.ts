@@ -23,7 +23,7 @@ const mockInsights = [
   {
     title: 'Eat Veg',
     description: 'Switch to vegetarian meals.',
-    saving_kg: 5,
+    potential_reduction_kg: 5,
     category: 'food' as const,
     icon: '🥦',
   },
