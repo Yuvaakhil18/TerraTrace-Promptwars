@@ -142,8 +142,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           size: 'invisible',
         });
       }
-    } catch (err) {
-      console.error('Recaptcha setup failed:', err);
+    } catch (_err) {
+      // Recaptcha setup failure is non-critical — will be caught on phone auth attempt
     }
   }, []);
 

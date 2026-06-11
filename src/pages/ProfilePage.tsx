@@ -69,8 +69,8 @@ export default function ProfilePage() {
       setLocation(loc);
       setSaveSuccess(true);
       setTimeout(() => { setEditOpen(false); setSaveSuccess(false); }, 1200);
-    } catch (err) {
-      console.error('Update failed:', err);
+    } catch (_err) {
+      // Error is silently handled — user can retry via the modal
     } finally {
       setSaving(false);
     }
@@ -117,7 +117,7 @@ export default function ProfilePage() {
     },
   ];
 
-  // Removed TABS array
+
 
   // SVG gauge math
   const radius = 54;

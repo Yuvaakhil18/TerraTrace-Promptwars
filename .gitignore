@@ -37,3 +37,7 @@ skills-lock.json
 # Misc
 replace-colors.cjs
 tsconfig.tsbuildinfo
+fix.cjs
+recover.js
+recover.cjs
+firebase-debug.log
