@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-ssr
+.firebase
+.env
+.env.*
+.git
+.github
+coverage
+firebase-debug.log
+.DS_Store
