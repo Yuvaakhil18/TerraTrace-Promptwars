@@ -31,8 +31,7 @@ export function useActivities() {
       );
       setActivities(data);
     } catch (err) {
-      console.error('Failed to load activities', err);
-      setError('Failed to load activities. Please check your connection.');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -68,7 +67,6 @@ export function useActivities() {
     try {
       await createDocument(`users/${currentUser.uid}/activities`, activity.id, activity);
     } catch (err) {
-      console.error('Failed to save activity to Firestore', err);
       setActivities(prev => prev.filter(a => a.id !== activity.id));
       throw new Error('Failed to save activity. Please try again.');
     }
@@ -82,7 +80,6 @@ export function useActivities() {
     try {
       await deleteDocument(`users/${currentUser.uid}/activities`, id);
     } catch (err) {
-      console.error('Failed to delete activity from Firestore', err);
       setActivities(previous);
       throw new Error('Failed to delete activity. Please try again.');
     }

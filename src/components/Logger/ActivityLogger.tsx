@@ -62,8 +62,8 @@ export default function ActivityLogger({ onAdd }: ActivityLoggerProps) {
       setNote('');
       setQuantityError('');
       showToast('Activity logged successfully!');
-    } catch (err: any) {
-      setQuantityError(err.message || 'Failed to save. Please try again.');
+    } catch (err: unknown) {
+      setQuantityError(err instanceof Error ? err.message : 'Failed to save. Please try again.');
     }
   }
 

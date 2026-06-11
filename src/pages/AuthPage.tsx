@@ -56,8 +56,8 @@ export default function AuthPage() {
           await signUpWithEmail(email, password);
         }
       }
-    } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Authentication failed');
     } finally {
       setLoading(false);
     }
@@ -68,8 +68,8 @@ export default function AuthPage() {
     setLoading(true);
     try {
       await providerFunction();
-    } catch (err: any) {
-      setError(err.message || 'Provider login failed');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Provider login failed');
     } finally {
       setLoading(false);
     }

@@ -167,7 +167,7 @@ export default function GeminiInsights({ weeklySummary }: GeminiInsightsProps) {
         {status === 'success' && (
           <button
             onClick={() => refreshInsights(weeklySummary)}
-            disabled={status === 'loading' as any}
+            disabled={false}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[#059669] text-[#059669] text-xs font-bold hover:bg-[#eaf6ec] transition-all group shrink-0"
           >
             <svg

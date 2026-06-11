@@ -102,7 +102,7 @@ export default function ChallengeBoard() {
           setChallenges(INITIAL_CHALLENGES);
         }
       } catch (err) {
-        console.error('Failed to load challenges:', err);
+        // Silently fail or use an error tracking service in production
       }
     }
     loadChallenges();
@@ -122,7 +122,6 @@ export default function ChallengeBoard() {
       const completedIds = newChallenges.filter(c => c.completed).map(c => c.id);
       await createDocument(`users/${currentUser.uid}/data`, 'challenges', { completedIds });
     } catch (err) {
-      console.error('Failed to save challenge progress:', err);
       setChallenges(prev => prev.map(c => (c.id === id ? { ...c, completed: false } : c)));
     }
   }

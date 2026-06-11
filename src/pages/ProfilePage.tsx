@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
-import type { ReactNode } from 'react';
+
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import { useActivities } from '../hooks/useActivities';
 import { useEmissions } from '../hooks/useEmissions';
-
-type SettingsTab = 'personal' | 'notifications' | 'privacy' | 'connected';
+import EditProfileModal from '../components/Profile/EditProfileModal';
+import AccountSettings, { type SettingsTab } from '../components/Profile/AccountSettings';
 
 export default function ProfilePage() {
   const { currentUser } = useAuth();
@@ -117,25 +117,7 @@ export default function ProfilePage() {
     },
   ];
 
-  // Settings tabs
-  const TABS: { id: SettingsTab; label: string; icon: ReactNode }[] = [
-    {
-      id: 'personal', label: 'Personal Information',
-      icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-    },
-    {
-      id: 'notifications', label: 'Notifications',
-      icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-    },
-    {
-      id: 'privacy', label: 'Privacy & Security',
-      icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-    },
-    {
-      id: 'connected', label: 'Connected Accounts',
-      icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
-    },
-  ];
+  // Removed TABS array
 
   // SVG gauge math
   const radius = 54;
@@ -358,207 +340,34 @@ export default function ProfilePage() {
       </div>
 
       {/* ── Row 3: Account Settings ─────────────── */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
-          <h3 className="text-sm font-bold text-slate-900">Account Settings</h3>
-        </div>
-        <div className="flex flex-col md:flex-row">
-
-          {/* Left Sidebar Tabs */}
-          <div className="md:w-56 border-b md:border-b-0 md:border-r border-slate-100 p-4 flex flex-row md:flex-col gap-1 overflow-x-auto md:overflow-visible">
-            {TABS.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left whitespace-nowrap transition-all w-full ${
-                  activeTab === tab.id
-                    ? 'bg-[#eaf6ec] text-[#059669]'
-                    : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                {tab.icon}
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Right Content */}
-          <div className="flex-1 p-6">
-            {activeTab === 'personal' && (
-              <div className="space-y-1 divide-y divide-slate-50">
-                {[
-                  { label: 'Full Name',     value: displayName },
-                  { label: 'Email Address', value: email },
-                  { label: 'Location',      value: location },
-                  { label: 'Member Since',  value: joinedDate },
-                ].map(field => (
-                  <div key={field.label} className="flex items-center justify-between py-3 group">
-                    <div>
-                      <p className="text-xs text-slate-400 font-medium">{field.label}</p>
-                      <p className="text-sm font-semibold text-slate-900">{field.value}</p>
-                    </div>
-                    <svg className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                ))}
-              </div>
-            )}
-            {activeTab === 'notifications' && (
-              <div className="space-y-4">
-                {[
-                  { label: 'Activity Reminders', desc: 'Daily reminder to log your activities', on: true },
-                  { label: 'Weekly Summary', desc: 'Get a weekly summary of your footprint', on: true },
-                  { label: 'Challenge Alerts', desc: 'Be notified when new challenges are available', on: false },
-                  { label: 'AI Insights', desc: 'Receive personalised tips from EcoCoach', on: true },
-                ].map(n => (
-                  <div key={n.label} className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{n.label}</p>
-                      <p className="text-xs text-slate-500">{n.desc}</p>
-                    </div>
-                    <div className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${n.on ? 'bg-[#059669]' : 'bg-slate-200'}`}>
-                      <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${n.on ? 'right-0.5' : 'left-0.5'}`} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            {activeTab === 'privacy' && (
-              <div className="space-y-3">
-                {[
-                  { label: 'Change Password', desc: 'Update your account password' },
-                  { label: 'Two-Factor Authentication', desc: 'Add an extra layer of security' },
-                  { label: 'Download My Data', desc: 'Export all your emission records' },
-                  { label: 'Delete Account', desc: 'Permanently remove your account', danger: true },
-                ].map(item => (
-                  <div key={item.label} className={`flex items-center justify-between p-3 rounded-xl border ${item.danger ? 'border-rose-100 hover:bg-rose-50' : 'border-slate-100 hover:bg-slate-50'} transition-colors cursor-pointer group`}>
-                    <div>
-                      <p className={`text-sm font-semibold ${item.danger ? 'text-rose-600' : 'text-slate-900'}`}>{item.label}</p>
-                      <p className="text-xs text-slate-500">{item.desc}</p>
-                    </div>
-                    <svg className="w-4 h-4 text-slate-300 group-hover:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                ))}
-              </div>
-            )}
-            {activeTab === 'connected' && (
-              <div className="space-y-3">
-                {[
-                  { icon: '🔵', label: 'Google', desc: currentUser?.providerData?.find(p => p.providerId === 'google.com') ? 'Connected' : 'Not connected', connected: !!currentUser?.providerData?.find(p => p.providerId === 'google.com') },
-                  { icon: '📘', label: 'Facebook', desc: 'Not connected', connected: false },
-                  { icon: '🍎', label: 'Apple', desc: 'Not connected', connected: false },
-                ].map(acc => (
-                  <div key={acc.label} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{acc.icon}</span>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{acc.label}</p>
-                        <p className="text-xs text-slate-500">{acc.desc}</p>
-                      </div>
-                    </div>
-                    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${acc.connected ? 'bg-[#eaf6ec] text-[#059669]' : 'bg-slate-100 text-slate-400'}`}>
-                      {acc.connected ? '✓ Connected' : 'Connect'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <AccountSettings 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        displayName={displayName}
+        email={email}
+        location={location}
+        joinedDate={joinedDate}
+        currentUser={currentUser}
+      />
 
     </div>
 
-      {/* ── Edit Profile Modal ─────────────────── */}
-      {editOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setEditOpen(false)}>
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-          <div
-            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-in"
-            onClick={e => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#059669]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-                Edit Profile
-              </h2>
-              <button onClick={() => setEditOpen(false)} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-              </button>
-            </div>
-
-            {/* Avatar Preview */}
-            <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#059669] to-[#22c55e] flex items-center justify-center text-white text-3xl font-bold shadow-md border-4 border-[#eaf6ec] overflow-hidden">
-                {currentUser?.photoURL && !imgError
-                  ? <img src={currentUser.photoURL} className="w-full h-full object-cover" alt="avatar" onError={() => setImgError(true)} />
-                  : <span>{editName[0]?.toUpperCase() || userInitial}</span>}
-              </div>
-            </div>
-
-            {/* Form Fields */}
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Full Name</label>
-                <input
-                  type="text"
-                  value={editName}
-                  onChange={e => setEditName(e.target.value)}
-                  placeholder="Your display name"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#059669]/30 focus:border-[#059669] transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
-                <input
-                  type="email"
-                  value={email}
-                  disabled
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-100 bg-slate-50 text-sm text-slate-400 cursor-not-allowed"
-                />
-                <p className="text-[10px] text-slate-400 mt-1">Email cannot be changed here.</p>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Location</label>
-                <input
-                  type="text"
-                  value={editLocation}
-                  onChange={e => setEditLocation(e.target.value)}
-                  placeholder="e.g. Mumbai, India"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#059669]/30 focus:border-[#059669] transition-all"
-                />
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={() => setEditOpen(false)}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving || !editName.trim()}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#059669] to-[#22c55e] text-white text-sm font-bold shadow-sm hover:shadow-md transition-all disabled:opacity-60 flex items-center justify-center gap-2"
-              >
-                {saving ? (
-                  <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg> Saving…</>
-                ) : saveSuccess ? (
-                  <><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg> Saved!</>
-                ) : 'Save Changes'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <EditProfileModal 
+        editOpen={editOpen}
+        setEditOpen={setEditOpen}
+        currentUser={currentUser}
+        imgError={imgError}
+        setImgError={setImgError}
+        userInitial={userInitial}
+        editName={editName}
+        setEditName={setEditName}
+        email={email}
+        editLocation={editLocation}
+        setEditLocation={setEditLocation}
+        handleSave={handleSave}
+        saving={saving}
+        saveSuccess={saveSuccess}
+      />
     </>
   );
 }

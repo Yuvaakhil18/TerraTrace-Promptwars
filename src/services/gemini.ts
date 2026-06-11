@@ -134,9 +134,9 @@ User emission summary (past 7 days):
       fullText = response.text ?? '';
       lastError = null;
       break; // success — stop trying fallback models
-    } catch (err: any) {
-      const msg: string = err?.message ?? '';
-      const status: number = err?.status ?? 0;
+    } catch (err: unknown) {
+      const msg: string = err instanceof Error ? err.message : String(err);
+      const status: number = typeof err === 'object' && err && 'status' in err ? Number((err as { status: unknown }).status) : 0;
 
       if (status === 429 || msg.includes('429')) {
         throw new Error('rate_limited');
