@@ -4,6 +4,10 @@ import { fetchInsights, clearInsightsCache } from '../services/gemini';
 
 type Status = 'idle' | 'loading' | 'success' | 'error' | 'rate_limited';
 
+/**
+ * Hook that manages Gemini AI insight fetching with caching and rate-limit handling.
+ * Returns AI-generated reduction tips based on the user's weekly emission summary.
+ */
 export function useGemini() {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [status, setStatus] = useState<Status>('idle');

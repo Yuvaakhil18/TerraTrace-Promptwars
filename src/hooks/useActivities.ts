@@ -9,6 +9,10 @@ function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+/**
+ * Hook that manages the user's activity log with Firestore persistence.
+ * Provides CRUD operations with optimistic UI updates and rollback on failure.
+ */
 export function useActivities() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);

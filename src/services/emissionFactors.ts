@@ -7,6 +7,10 @@ export interface EmissionFactor {
   description: string;
 }
 
+/**
+ * IPCC AR6-aligned emission factors per activity category and sub-type.
+ * Sources: IPCC AR6, Our World in Data, CEA 2023 (India grid).
+ */
 export const EMISSION_FACTORS: Record<EmissionCategory, Record<string, EmissionFactor>> = {
   transport: {
     car_petrol:   { label: 'Car (petrol)',        unit: 'km', co2e_per_unit: 0.192, description: 'Average petrol passenger car' },
@@ -37,6 +41,13 @@ export const EMISSION_FACTORS: Record<EmissionCategory, Record<string, EmissionF
   },
 } as const;
 
+/**
+ * Calculates CO₂e emissions for a given activity.
+ * @param category - The emission category (transport, food, energy, shopping)
+ * @param subType - The specific activity sub-type within the category
+ * @param quantity - The amount of the activity performed
+ * @returns The calculated CO₂e in kilograms, rounded to 3 decimal places
+ */
 export function calculateEmission(
   category: EmissionCategory,
   subType: string,

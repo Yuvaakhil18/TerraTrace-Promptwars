@@ -1,12 +1,22 @@
 import { useMemo, useCallback } from 'react';
 import type { Activity, EmissionSummary, Category } from '../types';
 
+/** Number of days in a weekly reporting period. */
+const WEEKLY_PERIOD_DAYS = 7;
+
+/** All supported emission categories. */
+const ALL_CATEGORIES: Category[] = ['transport', 'food', 'energy', 'shopping'];
+
 function getDateString(offsetDays = 0): string {
   const d = new Date();
   d.setDate(d.getDate() - offsetDays);
   return d.toISOString().split('T')[0];
 }
 
+/**
+ * Hook that derives emission metrics from a list of activities.
+ * Computes today's total, weekly trend, category breakdown, and weekly summary.
+ */
 export function useEmissions(activities: Activity[]) {
   const todayTotal = useMemo(() => {
     const today = getDateString();
@@ -16,8 +26,8 @@ export function useEmissions(activities: Activity[]) {
   }, [activities]);
 
   const weeklyTotals = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => {
-      const date = getDateString(6 - i);
+    return Array.from({ length: WEEKLY_PERIOD_DAYS }, (_, i) => {
+      const date = getDateString(WEEKLY_PERIOD_DAYS - 1 - i);
       const total = activities
         .filter(a => a.timestamp.startsWith(date))
         .reduce((sum, a) => sum + a.co2e_kg, 0);
@@ -27,9 +37,9 @@ export function useEmissions(activities: Activity[]) {
 
   const categoryBreakdown = useMemo(() => {
     const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 7);
+    cutoff.setDate(cutoff.getDate() - WEEKLY_PERIOD_DAYS);
     const recent = activities.filter(a => new Date(a.timestamp) >= cutoff);
-    const categories: Category[] = ['transport', 'food', 'energy', 'shopping'];
+    const categories: Category[] = ALL_CATEGORIES;
     return Object.fromEntries(
       categories.map(cat => [
         cat,
