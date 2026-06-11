@@ -31,7 +31,7 @@ export function useActivities() {
       const data = await queryDocuments<Activity>(
         `users/${currentUser.uid}/activities`,
         'timestamp',
-        500
+        500,
       );
       setActivities(data);
     } catch (err) {
@@ -66,12 +66,12 @@ export function useActivities() {
       note: sanitizeText(params.note),
     };
 
-    setActivities(prev => [activity, ...prev]);
+    setActivities((prev) => [activity, ...prev]);
 
     try {
       await createDocument(`users/${currentUser.uid}/activities`, activity.id, activity);
     } catch (_err) {
-      setActivities(prev => prev.filter(a => a.id !== activity.id));
+      setActivities((prev) => prev.filter((a) => a.id !== activity.id));
       throw new Error('Failed to save activity. Please try again.');
     }
   }
@@ -79,7 +79,7 @@ export function useActivities() {
   async function removeActivity(id: string) {
     if (!currentUser) return;
     const previous = [...activities];
-    setActivities(prev => prev.filter(a => a.id !== id));
+    setActivities((prev) => prev.filter((a) => a.id !== id));
 
     try {
       await deleteDocument(`users/${currentUser.uid}/activities`, id);
@@ -89,5 +89,12 @@ export function useActivities() {
     }
   }
 
-  return { activities, loading, error, addActivity, deleteActivity: removeActivity, reload: loadActivities };
+  return {
+    activities,
+    loading,
+    error,
+    addActivity,
+    deleteActivity: removeActivity,
+    reload: loadActivities,
+  };
 }

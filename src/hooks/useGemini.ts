@@ -32,10 +32,13 @@ export function useGemini() {
     }
   }, []);
 
-  const refreshInsights = useCallback(async (summary: EmissionSummary) => {
-    clearInsightsCache();
-    await loadInsights(summary);
-  }, [loadInsights]);
+  const refreshInsights = useCallback(
+    async (summary: EmissionSummary) => {
+      clearInsightsCache();
+      await loadInsights(summary);
+    },
+    [loadInsights],
+  );
 
   return { insights, status, errorMessage, loadInsights, refreshInsights };
 }

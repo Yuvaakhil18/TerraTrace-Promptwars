@@ -18,26 +18,35 @@ export default function FootprintScore({ dailyAverage }: FootprintScoreProps) {
 
   // Calculate percentage for gauge (0-100 scale, where 22kg is 0 score, 0kg is 100 score)
   const scoreValue = Math.max(0, Math.min(100, Math.round(100 - (dailyAverage / 22) * 100)));
-  
+
   // SVG Semi-circle math
   const radius = 65;
   const circumference = Math.PI * radius; // Semi-circle is exactly half the full circumference
   const strokeDashoffset = circumference - (scoreValue / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-      <div className="flex items-center gap-2 mb-6">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="mb-6 flex items-center gap-2">
         <h3 className="text-base font-bold text-slate-900">Your Footprint Score</h3>
-        <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <svg
+          className="h-4 w-4 text-slate-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
         </svg>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-8 mb-8">
-        
+      <div className="mb-8 flex flex-col items-center justify-between gap-8 sm:flex-row">
         {/* Semi-circular Gauge */}
-        <div className="relative w-48 h-28 flex-shrink-0">
-          <svg className="w-full h-full overflow-visible" viewBox="0 0 160 90">
+        <div className="relative h-28 w-48 flex-shrink-0">
+          <svg className="h-full w-full overflow-visible" viewBox="0 0 160 90">
             {/* Defs for gradient */}
             <defs>
               <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -70,21 +79,22 @@ export default function FootprintScore({ dailyAverage }: FootprintScoreProps) {
 
           {/* Inner Content */}
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-center text-center">
-            <span className={`text-xl mb-1 ${color}`}>🌿</span>
-            <span className={`text-lg font-bold leading-tight ${color}`}>{label}</span>
-            <div className="mt-2 text-[10px] text-slate-500 font-medium">
-              Daily average:<br/>
-              <span className="text-slate-900 font-bold">{dailyAverage.toFixed(2)} kg CO₂e</span>
+            <span className={`mb-1 text-xl ${color}`}>🌿</span>
+            <span className={`text-lg leading-tight font-bold ${color}`}>{label}</span>
+            <div className="mt-2 text-[10px] font-medium text-slate-500">
+              Daily average:
+              <br />
+              <span className="font-bold text-slate-900">{dailyAverage.toFixed(2)} kg CO₂e</span>
             </div>
           </div>
         </div>
 
         {/* Badge "You're doing better..." */}
-        <div className="bg-[#f3fbf5] rounded-xl p-4 flex items-center gap-3 border border-transparent flex-1 max-w-[200px]">
-          <div className="w-8 h-8 rounded-full bg-[#eaf6ec] flex items-center justify-center text-[#059669] flex-shrink-0">
+        <div className="flex max-w-[200px] flex-1 items-center gap-3 rounded-xl border border-transparent bg-[#f3fbf5] p-4">
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#eaf6ec] text-[#059669]">
             🌿
           </div>
-          <p className="text-xs text-slate-700 font-medium leading-relaxed">
+          <p className="text-xs leading-relaxed font-medium text-slate-700">
             You're doing better than <strong className="text-[#059669]">68%</strong> of users!
           </p>
         </div>
@@ -92,31 +102,32 @@ export default function FootprintScore({ dailyAverage }: FootprintScoreProps) {
 
       {/* Linear Slider (Bottom) */}
       <div className="mt-8">
-        <div className="flex justify-between text-[10px] text-slate-500 font-medium mb-2 px-1">
+        <div className="mb-2 flex justify-between px-1 text-[10px] font-medium text-slate-500">
           <span>0 kg/day</span>
           <span>Global avg: 11 kg/day</span>
           <span>22+ kg/day</span>
         </div>
-        
-        <div className="relative h-2.5 rounded-full overflow-visible bg-gradient-to-r from-[#059669] via-[#f59e0b] to-[#f43f5e]">
+
+        <div className="relative h-2.5 overflow-visible rounded-full bg-gradient-to-r from-[#059669] via-[#f59e0b] to-[#f43f5e]">
           {/* Global average marker */}
-          <div className="absolute top-0 bottom-0 w-0.5 bg-white shadow-sm" style={{ left: '50%' }} />
-          
+          <div
+            className="absolute top-0 bottom-0 w-0.5 bg-white shadow-sm"
+            style={{ left: '50%' }}
+          />
+
           {/* User indicator bubble */}
-          <div 
-            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-4 border-[#059669] rounded-full shadow-md"
+          <div
+            className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-4 border-[#059669] bg-white shadow-md"
             style={{ left: `calc(${Math.min((dailyAverage / 22) * 100, 100)}% - 8px)` }}
           />
         </div>
 
-        <p className="text-xs text-slate-500 font-medium text-center mt-6">
+        <p className="mt-6 text-center text-xs font-medium text-slate-500">
           {dailyAverage < GLOBAL_AVERAGE_KG_DAY
             ? `You emit ${(GLOBAL_AVERAGE_KG_DAY - dailyAverage).toFixed(2)} kg less than the global average per day 🎉`
-            : `You emit ${(dailyAverage - GLOBAL_AVERAGE_KG_DAY).toFixed(2)} kg more than the global average per day`
-          }
+            : `You emit ${(dailyAverage - GLOBAL_AVERAGE_KG_DAY).toFixed(2)} kg more than the global average per day`}
         </p>
       </div>
-
     </div>
   );
 }

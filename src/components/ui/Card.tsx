@@ -8,18 +8,18 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantClasses: Record<string, string> = {
-  default:  'bg-[var(--bg-card)] border-[var(--border-subtle)] shadow-[var(--shadow-card)]',
+  default: 'bg-[var(--bg-card)] border-[var(--border-subtle)] shadow-[var(--shadow-card)]',
   elevated: 'bg-[var(--bg-card)] border-[var(--border-subtle)] shadow-[var(--shadow-card-hover)]',
   bordered: 'bg-[var(--bg-card)] border-[var(--color-leaf)]/20',
-  leaf:     'bg-[var(--color-leaf)]/5 border-[var(--color-leaf)]/20',
-  glass:    'glass-panel',
+  leaf: 'bg-[var(--color-leaf)]/5 border-[var(--color-leaf)]/20',
+  glass: 'glass-panel',
 };
 
 const paddingStyles: Record<string, string> = {
   none: '',
-  sm:   'p-4',
-  md:   'p-5 sm:p-6',
-  lg:   'p-6 sm:p-8',
+  sm: 'p-4',
+  md: 'p-5 sm:p-6',
+  lg: 'p-6 sm:p-8',
 };
 
 export default function Card({
@@ -34,13 +34,7 @@ export default function Card({
   return (
     <div
       {...props}
-      className={`
-        rounded-2xl border transition-all duration-300
-        ${variantClasses[variant]}
-        ${paddingStyles[padding]}
-        ${hover ? 'hover:-translate-y-1 hover:shadow-lg hover:border-[var(--color-leaf)]/30 cursor-pointer' : ''}
-        ${className}
-      `.trim()}
+      className={`rounded-2xl border transition-all duration-300 ${variantClasses[variant]} ${paddingStyles[padding]} ${hover ? 'cursor-pointer hover:-translate-y-1 hover:border-[var(--color-leaf)]/30 hover:shadow-lg' : ''} ${className} `.trim()}
       style={style}
     >
       {children}

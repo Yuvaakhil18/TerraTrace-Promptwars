@@ -9,10 +9,10 @@ interface ProgressBarProps {
 }
 
 const colorStyles: Record<string, string> = {
-  leaf:   'bg-gradient-to-r from-leaf to-leaf-light',
-  amber:  'bg-gradient-to-r from-amber to-amber/70',
+  leaf: 'bg-gradient-to-r from-leaf to-leaf-light',
+  amber: 'bg-gradient-to-r from-amber to-amber/70',
   danger: 'bg-gradient-to-r from-danger to-danger/70',
-  sky:    'bg-gradient-to-r from-sky to-sky-light',
+  sky: 'bg-gradient-to-r from-sky to-sky-light',
 };
 
 const sizeStyles: Record<string, string> = {
@@ -35,17 +35,19 @@ export default function ProgressBar({
   return (
     <div className="w-full">
       {(showLabel || showValue) && (
-        <div className="flex justify-between items-center mb-1.5">
+        <div className="mb-1.5 flex items-center justify-between">
           {showLabel && (
             <span className="text-sm font-medium text-[var(--text-secondary)]">{label}</span>
           )}
           {showValue && (
-            <span className="text-sm text-[var(--text-muted)] tabular-nums">{value.toFixed(2)} kg</span>
+            <span className="text-sm text-[var(--text-muted)] tabular-nums">
+              {value.toFixed(2)} kg
+            </span>
           )}
         </div>
       )}
       <div
-        className={`w-full bg-[var(--bg-card-hover)] rounded-full overflow-hidden ${sizeStyles[size]}`}
+        className={`w-full overflow-hidden rounded-full bg-[var(--bg-card-hover)] ${sizeStyles[size]}`}
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}

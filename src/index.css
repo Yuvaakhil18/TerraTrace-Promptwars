@@ -1,32 +1,32 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 @layer base {
   :root {
     /* Emerald / Leaf Palette */
-    --color-leaf: #10b981;       /* Emerald 500 */
+    --color-leaf: #10b981; /* Emerald 500 */
     --color-leaf-light: #34d399; /* Emerald 400 */
-    --color-leaf-dark: #059669;  /* Emerald 600 */
+    --color-leaf-dark: #059669; /* Emerald 600 */
 
     /* Accent & Semantic Colors */
-    --color-danger: #f43f5e;     /* Rose 500 */
-    --color-warning: #f59e0b;    /* Amber 500 */
-    --color-sky: #0ea5e9;        /* Sky 500 */
+    --color-danger: #f43f5e; /* Rose 500 */
+    --color-warning: #f59e0b; /* Amber 500 */
+    --color-sky: #0ea5e9; /* Sky 500 */
 
     /* Light Theme Tokens */
-    --bg-background: #f8fafc;    /* Slate 50 */
+    --bg-background: #f8fafc; /* Slate 50 */
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
-    --bg-card-hover: #f1f5f9;    /* Slate 100 */
-    
-    --text-primary: #0f172a;     /* Slate 900 */
-    --text-secondary: #334155;   /* Slate 700 */
-    --text-muted: #64748b;       /* Slate 500 */
-    
-    --border-color: #e2e8f0;     /* Slate 200 */
-    --border-subtle: #f1f5f9;    /* Slate 100 */
-    
+    --bg-card-hover: #f1f5f9; /* Slate 100 */
+
+    --text-primary: #0f172a; /* Slate 900 */
+    --text-secondary: #334155; /* Slate 700 */
+    --text-muted: #64748b; /* Slate 500 */
+
+    --border-color: #e2e8f0; /* Slate 200 */
+    --border-subtle: #f1f5f9; /* Slate 100 */
+
     --input-bg: #f8fafc;
-    
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
     --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
@@ -38,20 +38,20 @@
     --color-leaf-light: #34d399;
     --color-leaf-dark: #059669;
 
-    --bg-background: #090e17; 
+    --bg-background: #090e17;
     --bg-surface: #0f1523;
     --bg-card: #151d2f;
     --bg-card-hover: #1b253c;
-    
+
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
-    
+
     --border-color: #1e293b;
     --border-subtle: #151e2d;
-    
+
     --input-bg: #0f1523;
-    
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
     --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
     --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
@@ -61,42 +61,98 @@
      These remap hardcoded Tailwind utilities to CSS vars in dark mode,
      so every component gets dark-mode support automatically.
   ─────────────────────────────────────────────────────────────────────── */
-  .dark .bg-white               { background-color: var(--bg-card) !important; }
-  .dark .bg-slate-50            { background-color: var(--bg-card-hover) !important; }
-  .dark .bg-slate-100           { background-color: var(--bg-card-hover) !important; }
-  .dark .bg-\[\#f8fafc\]        { background-color: var(--bg-card-hover) !important; }
-  .dark .bg-\[\#F8FAFC\]        { background-color: var(--bg-card-hover) !important; }
-  .dark .bg-\[\#f3fbf5\]        { background-color: color-mix(in srgb, #059669 15%, var(--bg-card)) !important; }
-  .dark .bg-\[\#eaf6ec\]        { background-color: color-mix(in srgb, #059669 20%, var(--bg-card)) !important; }
-  .dark .bg-\[\#f0fdf4\]        { background-color: color-mix(in srgb, #16a34a 20%, var(--bg-card)) !important; }
-  .dark .bg-blue-50             { background-color: color-mix(in srgb, var(--color-sky) 20%, var(--bg-card)) !important; }
-  .dark .bg-purple-50           { background-color: color-mix(in srgb, #a855f7 20%, var(--bg-card)) !important; }
-
-  .dark .border-slate-100       { border-color: var(--border-subtle) !important; }
-  .dark .border-slate-200       { border-color: var(--border-color) !important; }
-  .dark .border-slate-300       { border-color: #2d3f5a !important; }
-
-  .dark .text-slate-900         { color: var(--text-primary) !important; }
-  .dark .text-slate-800         { color: var(--text-primary) !important; }
-  .dark .text-slate-700         { color: var(--text-secondary) !important; }
-  .dark .text-slate-600         { color: var(--text-secondary) !important; }
-  .dark .text-slate-500         { color: var(--text-muted) !important; }
-  .dark .text-slate-400         { color: var(--text-muted) !important; }
-  .dark .text-\[\#059669\]      { color: var(--color-leaf-light) !important; }
-
-  .dark .gradient-leaf-radial {
-    background: radial-gradient(circle at top right, color-mix(in srgb, var(--color-leaf) 5%, transparent) 0%, transparent 40%),
-                radial-gradient(circle at bottom left, color-mix(in srgb, var(--color-sky) 3%, transparent) 0%, transparent 40%);
+  .dark .bg-white {
+    background-color: var(--bg-card) !important;
+  }
+  .dark .bg-slate-50 {
+    background-color: var(--bg-card-hover) !important;
+  }
+  .dark .bg-slate-100 {
+    background-color: var(--bg-card-hover) !important;
+  }
+  .dark .bg-\[\#f8fafc\] {
+    background-color: var(--bg-card-hover) !important;
+  }
+  .dark .bg-\[\#F8FAFC\] {
+    background-color: var(--bg-card-hover) !important;
+  }
+  .dark .bg-\[\#f3fbf5\] {
+    background-color: color-mix(in srgb, #059669 15%, var(--bg-card)) !important;
+  }
+  .dark .bg-\[\#eaf6ec\] {
+    background-color: color-mix(in srgb, #059669 20%, var(--bg-card)) !important;
+  }
+  .dark .bg-\[\#f0fdf4\] {
+    background-color: color-mix(in srgb, #16a34a 20%, var(--bg-card)) !important;
+  }
+  .dark .bg-blue-50 {
+    background-color: color-mix(in srgb, var(--color-sky) 20%, var(--bg-card)) !important;
+  }
+  .dark .bg-purple-50 {
+    background-color: color-mix(in srgb, #a855f7 20%, var(--bg-card)) !important;
   }
 
-  .dark .hover\:bg-slate-100:hover { background-color: var(--bg-card-hover) !important; }
+  .dark .border-slate-100 {
+    border-color: var(--border-subtle) !important;
+  }
+  .dark .border-slate-200 {
+    border-color: var(--border-color) !important;
+  }
+  .dark .border-slate-300 {
+    border-color: #2d3f5a !important;
+  }
+
+  .dark .text-slate-900 {
+    color: var(--text-primary) !important;
+  }
+  .dark .text-slate-800 {
+    color: var(--text-primary) !important;
+  }
+  .dark .text-slate-700 {
+    color: var(--text-secondary) !important;
+  }
+  .dark .text-slate-600 {
+    color: var(--text-secondary) !important;
+  }
+  .dark .text-slate-500 {
+    color: var(--text-muted) !important;
+  }
+  .dark .text-slate-400 {
+    color: var(--text-muted) !important;
+  }
+  .dark .text-\[\#059669\] {
+    color: var(--color-leaf-light) !important;
+  }
+
+  .dark .gradient-leaf-radial {
+    background: radial-gradient(
+        circle at top right,
+        color-mix(in srgb, var(--color-leaf) 5%, transparent) 0%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        color-mix(in srgb, var(--color-sky) 3%, transparent) 0%,
+        transparent 40%
+      );
+  }
+
+  .dark .hover\:bg-slate-100:hover {
+    background-color: var(--bg-card-hover) !important;
+  }
 
   /* Card / Panel surfaces in dark mode */
-  .dark .shadow-sm              { box-shadow: var(--shadow-sm) !important; }
-  .dark .shadow-md              { box-shadow: 0 4px 16px -2px rgb(0 0 0 / 0.5) !important; }
+  .dark .shadow-sm {
+    box-shadow: var(--shadow-sm) !important;
+  }
+  .dark .shadow-md {
+    box-shadow: 0 4px 16px -2px rgb(0 0 0 / 0.5) !important;
+  }
 
   /* Input backgrounds */
-  .dark input, .dark textarea, .dark select {
+  .dark input,
+  .dark textarea,
+  .dark select {
     background-color: var(--input-bg) !important;
     border-color: var(--border-color) !important;
     color: var(--text-primary) !important;
@@ -111,16 +167,24 @@
 
 @layer utilities {
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--color-leaf-dark)] to-[var(--color-leaf-light)];
+    @apply bg-gradient-to-r from-[var(--color-leaf-dark)] to-[var(--color-leaf-light)] bg-clip-text text-transparent;
   }
 
   .gradient-leaf-radial {
-    background: radial-gradient(circle at top right, color-mix(in srgb, var(--color-leaf) 10%, transparent) 0%, transparent 50%),
-                radial-gradient(circle at bottom left, color-mix(in srgb, var(--color-sky) 5%, transparent) 0%, transparent 50%);
+    background: radial-gradient(
+        circle at top right,
+        color-mix(in srgb, var(--color-leaf) 10%, transparent) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        color-mix(in srgb, var(--color-sky) 5%, transparent) 0%,
+        transparent 50%
+      );
   }
 
   .glass-panel {
-    @apply bg-[var(--bg-card)]/80 backdrop-blur-md border border-[var(--border-color)];
+    @apply border border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-md;
   }
 
   .gradient-border {
@@ -128,7 +192,7 @@
     background-clip: padding-box;
     border: 1px solid transparent;
   }
-  
+
   .gradient-border::before {
     content: '';
     position: absolute;
@@ -143,19 +207,19 @@
   .animate-fade-in {
     animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  
+
   .animate-fade-in-up {
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  
+
   .animate-scale-in {
     animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  
+
   .animate-bounce-in {
     animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
-  
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
@@ -164,37 +228,78 @@
     opacity: 0;
     animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  
-  .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
-  .stagger-children > *:nth-child(2) { animation-delay: 0.10s; }
-  .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
-  .stagger-children > *:nth-child(4) { animation-delay: 0.20s; }
-  .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
-  .stagger-children > *:nth-child(6) { animation-delay: 0.30s; }
+
+  .stagger-children > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .stagger-children > *:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .stagger-children > *:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  .stagger-children > *:nth-child(4) {
+    animation-delay: 0.2s;
+  }
+  .stagger-children > *:nth-child(5) {
+    animation-delay: 0.25s;
+  }
+  .stagger-children > *:nth-child(6) {
+    animation-delay: 0.3s;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes bounceIn {
-  0% { opacity: 0; transform: scale(0.8); }
-  60% { opacity: 1; transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }

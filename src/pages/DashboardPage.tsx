@@ -10,15 +10,16 @@ import CategoryBreakdown from '../components/Dashboard/CategoryBreakdown';
 import Spinner from '../components/ui/Spinner';
 
 const PERIODS = [
-  { label: 'Today',      days: 1  },
-  { label: 'This Week',  days: 7  },
+  { label: 'Today', days: 1 },
+  { label: 'This Week', days: 7 },
   { label: 'This Month', days: 30 },
   { label: 'Last 90 Days', days: 90 },
 ];
 
 export default function DashboardPage() {
   const { activities, loading, error } = useActivities();
-  const { getTodayTotal, getWeeklyTotals, getCategoryBreakdown, getWeeklySummary } = useEmissions(activities);
+  const { getTodayTotal, getWeeklyTotals, getCategoryBreakdown, getWeeklySummary } =
+    useEmissions(activities);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
@@ -27,92 +28,136 @@ export default function DashboardPage() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const periodRef = useRef<HTMLDivElement>(null);
-  const notifRef  = useRef<HTMLDivElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (periodRef.current && !periodRef.current.contains(e.target as Node)) setPeriodOpen(false);
-      if (notifRef.current  && !notifRef.current.contains(e.target as Node))  setNotifOpen(false);
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) setNotifOpen(false);
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  if (loading) return (
-    <div className="min-h-full flex items-center justify-center">
-      <Spinner label="Loading dashboard..." />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex min-h-full items-center justify-center">
+        <Spinner label="Loading dashboard..." />
+      </div>
+    );
 
-  if (error) return (
-    <div className="min-h-full flex items-center justify-center px-4">
-      <p className="text-danger">{error}</p>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="flex min-h-full items-center justify-center px-4">
+        <p className="text-danger">{error}</p>
+      </div>
+    );
 
-  const todayTotal    = getTodayTotal();
-  const weeklyTotals  = getWeeklyTotals();
+  const todayTotal = getTodayTotal();
+  const weeklyTotals = getWeeklyTotals();
   const categoryBreakdown = getCategoryBreakdown(selectedPeriod.days);
   const weeklySummary = getWeeklySummary();
-  const dailyAverage  = weeklySummary.total_kg / 7;
+  const dailyAverage = weeklySummary.total_kg / 7;
 
   // Build notifications from recent activities
   const recentActivities = [...activities]
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 5);
 
-  const notifications = recentActivities.length > 0
-    ? recentActivities.map(act => ({
-        icon: act.category === 'transport' ? '🚗' : act.category === 'food' ? '🥗' : act.category === 'energy' ? '⚡' : '🛍️',
-        title: `Logged: ${act.subType}`,
-        desc: `${act.co2e_kg.toFixed(2)} kg CO₂e · ${act.category}`,
-        time: new Date(act.timestamp).toLocaleDateString(),
-      }))
-    : [{ icon: '📝', title: 'No activities yet', desc: 'Log your first activity to see insights.', time: '' }];
+  const notifications =
+    recentActivities.length > 0
+      ? recentActivities.map((act) => ({
+          icon:
+            act.category === 'transport'
+              ? '🚗'
+              : act.category === 'food'
+                ? '🥗'
+                : act.category === 'energy'
+                  ? '⚡'
+                  : '🛍️',
+          title: `Logged: ${act.subType}`,
+          desc: `${act.co2e_kg.toFixed(2)} kg CO₂e · ${act.category}`,
+          time: new Date(act.timestamp).toLocaleDateString(),
+        }))
+      : [
+          {
+            icon: '📝',
+            title: 'No activities yet',
+            desc: 'Log your first activity to see insights.',
+            time: '',
+          },
+        ];
 
-  const userInitial = currentUser?.displayName?.[0]?.toUpperCase()
-    ?? currentUser?.email?.[0]?.toUpperCase()
-    ?? '?';
+  const userInitial =
+    currentUser?.displayName?.[0]?.toUpperCase() ?? currentUser?.email?.[0]?.toUpperCase() ?? '?';
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-
+    <div className="mx-auto max-w-7xl space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            Welcome back{currentUser?.displayName ? `, ${currentUser.displayName.split(' ')[0]}` : ''}! <span className="text-2xl">🌿</span>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            Welcome back
+            {currentUser?.displayName ? `, ${currentUser.displayName.split(' ')[0]}` : ''}!{' '}
+            <span className="text-2xl">🌿</span>
           </h1>
-          <p className="text-sm text-slate-500 mt-1">Track your personal footprint and work towards a greener lifestyle.</p>
+          <p className="mt-1 text-sm text-slate-500">
+            Track your personal footprint and work towards a greener lifestyle.
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
-
           {/* This Week Dropdown */}
           <div className="relative" ref={periodRef}>
             <button
-              onClick={() => { setPeriodOpen(o => !o); setNotifOpen(false); }}
-              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+              onClick={() => {
+                setPeriodOpen((o) => !o);
+                setNotifOpen(false);
+              }}
+              className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             >
-              <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg
+                className="h-4 w-4 text-slate-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
               {selectedPeriod.label}
-              <svg className={`w-4 h-4 text-slate-400 transition-transform ${periodOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <svg
+                className={`h-4 w-4 text-slate-400 transition-transform ${periodOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
             {periodOpen && (
-              <div className="absolute right-0 top-full mt-2 w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden animate-fade-in">
-                {PERIODS.map(p => (
+              <div className="animate-fade-in absolute top-full right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800">
+                {PERIODS.map((p) => (
                   <button
                     key={p.label}
-                    onClick={() => { setSelectedPeriod(p); setPeriodOpen(false); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                    onClick={() => {
+                      setSelectedPeriod(p);
+                      setPeriodOpen(false);
+                    }}
+                    className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
                       p.label === selectedPeriod.label
-                        ? 'bg-[#eaf6ec] dark:bg-[#059669]/20 text-[#059669] dark:text-[#34d399] font-bold'
-                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                        ? 'bg-[#eaf6ec] font-bold text-[#059669] dark:bg-[#059669]/20 dark:text-[#34d399]'
+                        : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700'
                     }`}
                   >
                     {p.label}
@@ -125,40 +170,68 @@ export default function DashboardPage() {
           {/* Notification Bell */}
           <div className="relative" ref={notifRef}>
             <button
-              onClick={() => { setNotifOpen(o => !o); setPeriodOpen(false); }}
-              className="relative p-2 text-slate-400 hover:text-slate-600 transition-colors rounded-lg hover:bg-slate-100"
+              onClick={() => {
+                setNotifOpen((o) => !o);
+                setPeriodOpen(false);
+              }}
+              className="relative rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
               </svg>
               {recentActivities.length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-[#22c55e] rounded-full border-2 border-white" />
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full border-2 border-white bg-[#22c55e]" />
               )}
             </button>
             {notifOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl z-50 overflow-hidden animate-fade-in">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
-                  <span className="text-sm font-bold text-slate-900 dark:text-slate-100">Recent Activity</span>
-                  <span className="text-[10px] font-bold text-[#059669] bg-[#eaf6ec] dark:bg-[#059669]/20 px-2 py-0.5 rounded-full">{recentActivities.length} logged</span>
+              <div className="animate-fade-in absolute top-full right-0 z-50 mt-2 w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
+                <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-700">
+                  <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                    Recent Activity
+                  </span>
+                  <span className="rounded-full bg-[#eaf6ec] px-2 py-0.5 text-[10px] font-bold text-[#059669] dark:bg-[#059669]/20">
+                    {recentActivities.length} logged
+                  </span>
                 </div>
-                <div className="max-h-72 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-700/50">
+                <div className="max-h-72 divide-y divide-slate-50 overflow-y-auto dark:divide-slate-700/50">
                   {notifications.map((n, i) => (
-                    <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                      <div className="w-9 h-9 rounded-full bg-[#f3fbf5] dark:bg-slate-700 flex items-center justify-center text-lg flex-shrink-0">{n.icon}</div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">{n.title}</p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{n.desc}</p>
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700"
+                    >
+                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#f3fbf5] text-lg dark:bg-slate-700">
+                        {n.icon}
                       </div>
-                      {n.time && <span className="text-[10px] text-slate-400 flex-shrink-0">{n.time}</span>}
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-bold text-slate-900 dark:text-slate-100">
+                          {n.title}
+                        </p>
+                        <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">
+                          {n.desc}
+                        </p>
+                      </div>
+                      {n.time && (
+                        <span className="flex-shrink-0 text-[10px] text-slate-400">{n.time}</span>
+                      )}
                     </div>
                   ))}
                   {recentActivities.length === 0 && (
-                    <p className="text-center text-sm text-slate-500 dark:text-slate-400 py-6">Log your first activity to see it here.</p>
+                    <p className="py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                      Log your first activity to see it here.
+                    </p>
                   )}
                 </div>
                 {recentActivities.length > 0 && (
-                  <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                    <button className="w-full text-center text-xs font-bold text-[#059669] hover:text-[#047857] transition-colors" onClick={() => navigate('/log')}>
+                  <div className="border-t border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
+                    <button
+                      className="w-full text-center text-xs font-bold text-[#059669] transition-colors hover:text-[#047857]"
+                      onClick={() => navigate('/log')}
+                    >
                       View All History →
                     </button>
                   </div>
@@ -170,19 +243,20 @@ export default function DashboardPage() {
           {/* Profile Avatar */}
           <button
             onClick={() => navigate('/profile')}
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-[#059669] to-[#22c55e] flex items-center justify-center text-white font-bold text-sm shadow-sm hover:shadow-md hover:scale-105 transition-all overflow-hidden"
+            className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#059669] to-[#22c55e] text-sm font-bold text-white shadow-sm transition-all hover:scale-105 hover:shadow-md"
             title="View Profile"
           >
-            {currentUser?.photoURL && !avatarError
-              ? <img
-                  src={currentUser.photoURL}
-                  className="w-full h-full object-cover"
-                  alt="avatar"
-                  onError={() => setAvatarError(true)}
-                />
-              : <span>{userInitial}</span>}
+            {currentUser?.photoURL && !avatarError ? (
+              <img
+                src={currentUser.photoURL}
+                className="h-full w-full object-cover"
+                alt="avatar"
+                onError={() => setAvatarError(true)}
+              />
+            ) : (
+              <span>{userInitial}</span>
+            )}
           </button>
-
         </div>
       </div>
 
@@ -190,14 +264,13 @@ export default function DashboardPage() {
       <EmissionsSummary todayTotal={todayTotal} weeklyTotal={weeklySummary.total_kg} />
 
       {/* Middle Row: Score and Trend */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <FootprintScore dailyAverage={dailyAverage} />
         <EmissionsChart weeklyData={weeklyTotals} />
       </div>
 
       {/* Bottom Row: Category Breakdown */}
       <CategoryBreakdown breakdown={categoryBreakdown} />
-
     </div>
   );
 }

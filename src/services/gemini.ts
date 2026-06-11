@@ -78,7 +78,9 @@ export async function fetchInsights(summary: EmissionSummary): Promise<Insight[]
 
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string;
   if (!apiKey || apiKey === 'your_key_here') {
-    throw new Error('Gemini API key is not configured. Please add VITE_GEMINI_API_KEY to your .env file.');
+    throw new Error(
+      'Gemini API key is not configured. Please add VITE_GEMINI_API_KEY to your .env file.',
+    );
   }
 
   lastCallTime = now;
@@ -110,18 +112,24 @@ User emission summary (past 7 days):
           type: 'OBJECT' as const,
           properties: {
             title: { type: 'STRING' as const, description: 'Brief title of the tip, max 8 words' },
-            description: { type: 'STRING' as const, description: 'Actionable description, max 60 words' },
-            potential_reduction_kg: { type: 'NUMBER' as const, description: 'Estimated CO2e saving in kg per week, must be a positive number' },
+            description: {
+              type: 'STRING' as const,
+              description: 'Actionable description, max 60 words',
+            },
+            potential_reduction_kg: {
+              type: 'NUMBER' as const,
+              description: 'Estimated CO2e saving in kg per week, must be a positive number',
+            },
             category: {
               type: 'STRING' as const,
               enum: ['transport', 'food', 'energy', 'shopping'],
-              description: 'The emission category this tip belongs to'
+              description: 'The emission category this tip belongs to',
             },
-            icon: { type: 'STRING' as const, description: 'A single emoji representing the tip' }
+            icon: { type: 'STRING' as const, description: 'A single emoji representing the tip' },
           },
-          required: ['title', 'description', 'potential_reduction_kg', 'category', 'icon']
-        }
-      }
+          required: ['title', 'description', 'potential_reduction_kg', 'category', 'icon'],
+        },
+      },
     },
   };
 
@@ -136,13 +144,18 @@ User emission summary (past 7 days):
       break; // success — stop trying fallback models
     } catch (err: unknown) {
       const msg: string = err instanceof Error ? err.message : String(err);
-      const status: number = typeof err === 'object' && err && 'status' in err ? Number((err as { status: unknown }).status) : 0;
+      const status: number =
+        typeof err === 'object' && err && 'status' in err
+          ? Number((err as { status: unknown }).status)
+          : 0;
 
       if (status === 429 || msg.includes('429')) {
         throw new Error('rate_limited');
       }
       if (status === 503 || msg.includes('503') || msg.includes('UNAVAILABLE')) {
-        lastError = new Error('The AI model is temporarily busy due to high demand. Please try again in a moment.');
+        lastError = new Error(
+          'The AI model is temporarily busy due to high demand. Please try again in a moment.',
+        );
         continue; // try next model
       }
       // Any other error — fail immediately with friendly message
@@ -164,14 +177,16 @@ User emission summary (past 7 days):
   }
 
   // Validate each insight has required fields
-  const validInsights = parsed.slice(0, 4).filter(
-    (item): item is Insight =>
-      typeof item.title === 'string' &&
-      typeof item.description === 'string' &&
-      typeof item.potential_reduction_kg === 'number' &&
-      ['transport', 'food', 'energy', 'shopping'].includes(item.category) &&
-      typeof item.icon === 'string'
-  );
+  const validInsights = parsed
+    .slice(0, 4)
+    .filter(
+      (item): item is Insight =>
+        typeof item.title === 'string' &&
+        typeof item.description === 'string' &&
+        typeof item.potential_reduction_kg === 'number' &&
+        ['transport', 'food', 'energy', 'shopping'].includes(item.category) &&
+        typeof item.icon === 'string',
+    );
 
   if (validInsights.length === 0) {
     throw new Error('AI returned invalid insights. Please try again.');

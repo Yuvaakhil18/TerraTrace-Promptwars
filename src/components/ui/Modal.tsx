@@ -78,10 +78,10 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className="relative w-full max-w-md bg-card rounded-card shadow-xl animate-fade-in focus:outline-none"
+        className="bg-card rounded-card animate-fade-in relative w-full max-w-md shadow-xl focus:outline-none"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-[var(--border-subtle)]">
+        <div className="flex items-center justify-between border-b border-[var(--border-subtle)] p-5">
           <h2 id="modal-title" className="text-lg font-semibold text-[var(--text-primary)]">
             {title}
           </h2>
@@ -90,10 +90,21 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
             size="sm"
             onClick={onClose}
             aria-label="Close modal"
-            className="!p-2 !min-w-0"
+            className="!min-w-0 !p-2"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </Button>
         </div>
@@ -102,11 +113,7 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
         <div className="p-5">{children}</div>
 
         {/* Footer */}
-        {footer && (
-          <div className="flex justify-end gap-3 px-5 pb-5">
-            {footer}
-          </div>
-        )}
+        {footer && <div className="flex justify-end gap-3 px-5 pb-5">{footer}</div>}
       </div>
     </div>
   );

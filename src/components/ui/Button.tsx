@@ -8,11 +8,15 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<string, string> = {
-  primary:   'bg-gradient-to-r from-[var(--color-leaf-dark)] to-[var(--color-leaf-light)] text-white hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
-  secondary: 'bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-color)] hover:border-[var(--color-leaf)]/30 hover:bg-[var(--color-leaf)]/5 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
-  outline:   'border-2 border-[var(--color-leaf)] text-[var(--color-leaf)] hover:bg-[var(--color-leaf)]/5 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
-  danger:    'bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger)]/90 hover:shadow-lg hover:shadow-rose-500/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
-  ghost:     'text-[var(--color-leaf)] hover:bg-[var(--color-leaf)]/5 active:scale-[0.98]',
+  primary:
+    'bg-gradient-to-r from-[var(--color-leaf-dark)] to-[var(--color-leaf-light)] text-white hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
+  secondary:
+    'bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-color)] hover:border-[var(--color-leaf)]/30 hover:bg-[var(--color-leaf)]/5 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
+  outline:
+    'border-2 border-[var(--color-leaf)] text-[var(--color-leaf)] hover:bg-[var(--color-leaf)]/5 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
+  danger:
+    'bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger)]/90 hover:shadow-lg hover:shadow-rose-500/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
+  ghost: 'text-[var(--color-leaf)] hover:bg-[var(--color-leaf)]/5 active:scale-[0.98]',
 };
 
 const sizeStyles: Record<string, string> = {
@@ -37,19 +41,11 @@ export default function Button({
       {...props}
       disabled={isDisabled}
       aria-disabled={isDisabled}
-      className={`
-        inline-flex items-center justify-center gap-2 rounded-xl font-bold
-        transition-all duration-300 cursor-pointer
-        focus-visible:outline-2 focus-visible:outline-[var(--color-leaf)] focus-visible:outline-offset-2
-        disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none
-        ${variantStyles[variant]}
-        ${sizeStyles[size]}
-        ${className}
-      `.trim()}
+      className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl font-bold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-leaf)] disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none ${variantStyles[variant]} ${sizeStyles[size]} ${className} `.trim()}
     >
       {loading && (
         <span
-          className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"
+          className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
           aria-hidden="true"
         />
       )}

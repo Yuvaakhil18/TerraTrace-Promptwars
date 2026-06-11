@@ -12,7 +12,7 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'mock-project-id',
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'mock-storage-bucket',
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || 'mock-sender-id',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || 'mock-app-id'
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || 'mock-app-id',
 };
 
 // Initialize Firebase

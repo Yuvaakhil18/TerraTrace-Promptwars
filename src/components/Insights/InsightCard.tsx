@@ -14,18 +14,22 @@ export default function InsightCard({ insight }: InsightCardProps) {
   else if (t.includes('waste') || t.includes('recycle') || t.includes('plastic')) icon = '♻️';
 
   return (
-    <div className="border border-slate-200 rounded-xl p-4 flex flex-col items-center text-center bg-white shadow-sm relative overflow-hidden group hover:border-[#059669] hover:shadow-md transition-all">
-      <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-2xl mb-3 group-hover:scale-110 group-hover:bg-[#eaf6ec] transition-all">
+    <div className="group relative flex flex-col items-center overflow-hidden rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm transition-all hover:border-[#059669] hover:shadow-md">
+      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 text-2xl transition-all group-hover:scale-110 group-hover:bg-[#eaf6ec]">
         {icon}
       </div>
-      <h4 className="text-xs font-bold text-slate-900 mb-1 leading-tight">{insight.title}</h4>
-      <p className="text-[10px] text-slate-500 mb-4 flex-1 leading-relaxed">{insight.description}</p>
-      
-      <div className="w-full pt-3 border-t border-slate-100">
-        <p className="text-[9px] text-slate-400 font-bold uppercase mb-0.5 tracking-wider">Potential savings</p>
+      <h4 className="mb-1 text-xs leading-tight font-bold text-slate-900">{insight.title}</h4>
+      <p className="mb-4 flex-1 text-[10px] leading-relaxed text-slate-500">
+        {insight.description}
+      </p>
+
+      <div className="w-full border-t border-slate-100 pt-3">
+        <p className="mb-0.5 text-[9px] font-bold tracking-wider text-slate-400 uppercase">
+          Potential savings
+        </p>
         <p className="text-xs font-bold text-[#059669]">
-          {insight.potential_reduction_kg 
-            ? `${insight.potential_reduction_kg.toFixed(2)} kg CO₂e` 
+          {insight.potential_reduction_kg
+            ? `${insight.potential_reduction_kg.toFixed(2)} kg CO₂e`
             : 'Varies'}
         </p>
       </div>

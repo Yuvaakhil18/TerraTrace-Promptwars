@@ -11,7 +11,7 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
   type User,
-  type ConfirmationResult
+  type ConfirmationResult,
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
@@ -174,9 +174,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 }

@@ -9,7 +9,7 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-[50vh]">
+      <div className="flex h-[50vh] items-center justify-center">
         <Spinner label="Checking authentication..." />
       </div>
     );

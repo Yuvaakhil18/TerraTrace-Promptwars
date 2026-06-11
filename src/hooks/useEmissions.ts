@@ -21,7 +21,7 @@ export function useEmissions(activities: Activity[]) {
   const todayTotal = useMemo(() => {
     const today = getDateString();
     return activities
-      .filter(a => a.timestamp.startsWith(today))
+      .filter((a) => a.timestamp.startsWith(today))
       .reduce((sum, a) => sum + a.co2e_kg, 0);
   }, [activities]);
 
@@ -29,7 +29,7 @@ export function useEmissions(activities: Activity[]) {
     return Array.from({ length: WEEKLY_PERIOD_DAYS }, (_, i) => {
       const date = getDateString(WEEKLY_PERIOD_DAYS - 1 - i);
       const total = activities
-        .filter(a => a.timestamp.startsWith(date))
+        .filter((a) => a.timestamp.startsWith(date))
         .reduce((sum, a) => sum + a.co2e_kg, 0);
       return { date, total: Math.round(total * 100) / 100 };
     });
@@ -38,12 +38,14 @@ export function useEmissions(activities: Activity[]) {
   const categoryBreakdown = useMemo(() => {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - WEEKLY_PERIOD_DAYS);
-    const recent = activities.filter(a => new Date(a.timestamp) >= cutoff);
+    const recent = activities.filter((a) => new Date(a.timestamp) >= cutoff);
     const categories: Category[] = ALL_CATEGORIES;
     return Object.fromEntries(
-      categories.map(cat => [
+      categories.map((cat) => [
         cat,
-        Math.round(recent.filter(a => a.category === cat).reduce((s, a) => s + a.co2e_kg, 0) * 100) / 100,
+        Math.round(
+          recent.filter((a) => a.category === cat).reduce((s, a) => s + a.co2e_kg, 0) * 100,
+        ) / 100,
       ]),
     ) as Record<Category, number>;
   }, [activities]);
@@ -52,7 +54,7 @@ export function useEmissions(activities: Activity[]) {
     const total = Object.values(categoryBreakdown).reduce((s, v) => s + v, 0);
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - 7);
-    const recent = activities.filter(a => new Date(a.timestamp) >= cutoff);
+    const recent = activities.filter((a) => new Date(a.timestamp) >= cutoff);
     const top = [...recent].sort((a, b) => b.co2e_kg - a.co2e_kg)[0];
     return {
       total_kg: Math.round(total * 100) / 100,
@@ -66,31 +68,36 @@ export function useEmissions(activities: Activity[]) {
 
   const getTodayTotal = useCallback(() => todayTotal, [todayTotal]);
   const getWeeklyTotals = useCallback(() => weeklyTotals, [weeklyTotals]);
-  const getCategoryBreakdown = useCallback((days = 7) => {
-    if (days === 7) return categoryBreakdown;
-    
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - days);
-    const recent = activities.filter(a => new Date(a.timestamp) >= cutoff);
-    const categories: Category[] = ['transport', 'food', 'energy', 'shopping'];
-    return Object.fromEntries(
-      categories.map(cat => [
-        cat,
-        Math.round(recent.filter(a => a.category === cat).reduce((s, a) => s + a.co2e_kg, 0) * 100) / 100,
-      ]),
-    ) as Record<Category, number>;
-  }, [activities, categoryBreakdown]);
+  const getCategoryBreakdown = useCallback(
+    (days = 7) => {
+      if (days === 7) return categoryBreakdown;
+
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - days);
+      const recent = activities.filter((a) => new Date(a.timestamp) >= cutoff);
+      const categories: Category[] = ['transport', 'food', 'energy', 'shopping'];
+      return Object.fromEntries(
+        categories.map((cat) => [
+          cat,
+          Math.round(
+            recent.filter((a) => a.category === cat).reduce((s, a) => s + a.co2e_kg, 0) * 100,
+          ) / 100,
+        ]),
+      ) as Record<Category, number>;
+    },
+    [activities, categoryBreakdown],
+  );
 
   const getWeeklySummary = useCallback(() => weeklySummary, [weeklySummary]);
 
-  return { 
-    todayTotal, 
-    weeklyTotals, 
-    categoryBreakdown, 
-    weeklySummary, 
-    getTodayTotal, 
-    getWeeklyTotals, 
-    getCategoryBreakdown, 
-    getWeeklySummary 
+  return {
+    todayTotal,
+    weeklyTotals,
+    categoryBreakdown,
+    weeklySummary,
+    getTodayTotal,
+    getWeeklyTotals,
+    getCategoryBreakdown,
+    getWeeklySummary,
   };
 }

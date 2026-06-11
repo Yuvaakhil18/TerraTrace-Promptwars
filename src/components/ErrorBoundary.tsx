@@ -32,23 +32,25 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center px-4 gradient-leaf-radial">
-          <div className="max-w-md w-full text-center animate-fade-in">
-            <div className="w-20 h-20 rounded-2xl bg-danger/10 flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl" aria-hidden="true">⚠️</span>
+        <div className="gradient-leaf-radial flex min-h-screen items-center justify-center px-4">
+          <div className="animate-fade-in w-full max-w-md text-center">
+            <div className="bg-danger/10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl">
+              <span className="text-4xl" aria-hidden="true">
+                ⚠️
+              </span>
             </div>
-            <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
+            <h1 className="mb-2 text-2xl font-bold text-[var(--text-primary)]">
               Something went wrong
             </h1>
-            <p className="text-sm text-[var(--text-secondary)] mb-6">
+            <p className="mb-6 text-sm text-[var(--text-secondary)]">
               An unexpected error occurred. Please try again.
             </p>
             {this.state.error && (
-              <p className="text-xs text-[var(--text-muted)] bg-[var(--bg-card-hover)] rounded-xl p-3 mb-6 font-mono break-all">
+              <p className="mb-6 rounded-xl bg-[var(--bg-card-hover)] p-3 font-mono text-xs break-all text-[var(--text-muted)]">
                 {this.state.error.message}
               </p>
             )}
-            <div className="flex gap-3 justify-center">
+            <div className="flex justify-center gap-3">
               <Button variant="primary" onClick={this.handleReset}>
                 Try Again
               </Button>

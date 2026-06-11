@@ -10,7 +10,11 @@ const sizeStyles: Record<string, string> = {
   lg: 'w-12 h-12 border-4',
 };
 
-export default function Spinner({ size = 'md', label = 'Loading...', fullScreen = false }: SpinnerProps) {
+export default function Spinner({
+  size = 'md',
+  label = 'Loading...',
+  fullScreen = false,
+}: SpinnerProps) {
   const spinner = (
     <div
       role="status"
@@ -18,28 +22,20 @@ export default function Spinner({ size = 'md', label = 'Loading...', fullScreen 
       className="flex flex-col items-center justify-center gap-3"
     >
       <div
-        className={`
-          ${sizeStyles[size]} rounded-full
-          border-leaf/20 border-t-leaf
-          animate-spin
-        `}
+        className={` ${sizeStyles[size]} border-leaf/20 border-t-leaf animate-spin rounded-full`}
         aria-hidden="true"
       />
-      <span className="text-sm text-[var(--text-muted)] font-medium">{label}</span>
+      <span className="text-sm font-medium text-[var(--text-muted)]">{label}</span>
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface/80 backdrop-blur-sm">
+      <div className="bg-surface/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
         {spinner}
       </div>
     );
   }
 
-  return (
-    <div className="flex items-center justify-center p-8">
-      {spinner}
-    </div>
-  );
+  return <div className="flex items-center justify-center p-8">{spinner}</div>;
 }
