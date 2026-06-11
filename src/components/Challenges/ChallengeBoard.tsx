@@ -101,7 +101,7 @@ export default function ChallengeBoard() {
         } else if (isMounted) {
           setChallenges(INITIAL_CHALLENGES);
         }
-      } catch (err) {
+      } catch (_err) {
         // Silently fail or use an error tracking service in production
       }
     }
@@ -121,7 +121,7 @@ export default function ChallengeBoard() {
     try {
       const completedIds = newChallenges.filter(c => c.completed).map(c => c.id);
       await createDocument(`users/${currentUser.uid}/data`, 'challenges', { completedIds });
-    } catch (err) {
+    } catch (_err) {
       setChallenges(prev => prev.map(c => (c.id === id ? { ...c, completed: false } : c)));
     }
   }

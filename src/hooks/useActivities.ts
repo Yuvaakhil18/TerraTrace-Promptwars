@@ -70,7 +70,7 @@ export function useActivities() {
 
     try {
       await createDocument(`users/${currentUser.uid}/activities`, activity.id, activity);
-    } catch (err) {
+    } catch (_err) {
       setActivities(prev => prev.filter(a => a.id !== activity.id));
       throw new Error('Failed to save activity. Please try again.');
     }
@@ -83,7 +83,7 @@ export function useActivities() {
 
     try {
       await deleteDocument(`users/${currentUser.uid}/activities`, id);
-    } catch (err) {
+    } catch (_err) {
       setActivities(previous);
       throw new Error('Failed to delete activity. Please try again.');
     }
