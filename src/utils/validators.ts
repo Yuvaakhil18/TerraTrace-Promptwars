@@ -1,6 +1,7 @@
 import type { Category } from '../types';
 
 /** Characters that can be used for XSS / injection attacks */
+// eslint-disable-next-line no-control-regex
 const STRIP_PATTERN = /[<>"'`\u0000-\u001F\u007F]/g;
 
 const VALID_CATEGORIES: readonly Category[] = ['transport', 'food', 'energy', 'shopping'] as const;

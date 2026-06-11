@@ -13,8 +13,8 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',
-      'security/detect-object-injection': 'off',
-      'no-control-regex': 'off'
+      'security/detect-object-injection': 'warn',
+      'no-control-regex': 'warn'
     },
   }
 );
